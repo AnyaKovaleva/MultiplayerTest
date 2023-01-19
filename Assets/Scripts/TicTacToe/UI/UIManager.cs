@@ -34,7 +34,10 @@ namespace DefaultNamespace.TicTacToe.UI
                 {
                     if (_currentPanel != null)
                     {
-                        _currentPanel.Close();
+                        if (_currentPanel is not GamePanel)
+                        {
+                            _currentPanel.Close();
+                        }
                     }
 
                     _currentPanel = uiPanel;
