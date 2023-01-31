@@ -1,4 +1,6 @@
 ﻿using System;
+using TicTacToe;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,10 +19,8 @@ namespace DefaultNamespace.TicTacToe.UI
 
         private void PickSide(TicTacToeValue side)
         {
-            GameManager.Instance.SetPlayer1Side(side);
-            
-            UIManager.Instance.Open(typeof(GamePanel));
-            GameManager.Instance.StartGame();
+            MultiplayerManager.Singleton.HostGame();
+            GameManager.Instance.SetHostSideServerRpc(side);
         }
     }
 }

@@ -58,5 +58,18 @@ namespace DefaultNamespace.TicTacToe.UI
                 }
             }
         }
+
+        public void OpenMessage(string message)
+        {
+            foreach (var uiPanel in _uiPanels)
+            {
+                if (uiPanel is UIMessage messagePanel)
+                {
+                    messagePanel.SetMessage(message);
+                    Open(typeof(UIMessage));
+                    return;
+                }
+            }
+        }
     }
 }

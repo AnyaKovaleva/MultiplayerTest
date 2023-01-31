@@ -1,4 +1,5 @@
 ﻿using System;
+using TicTacToe;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +23,8 @@ namespace DefaultNamespace.TicTacToe.UI
 
         private void JoinGame()
         {
-            
+            MultiplayerManager.Singleton.JoinGame();
+            UIManager.Instance.Open(typeof(GamePanel));
         }
     }
 }

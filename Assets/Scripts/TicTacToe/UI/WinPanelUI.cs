@@ -24,7 +24,7 @@ namespace DefaultNamespace.TicTacToe.UI
         private void Restart()
         {
             UIManager.Instance.Open(typeof(GamePanel));
-            GameManager.Instance.RestartCurrentGame();
+            GameManager.Instance.RestartCurrentGameServerRpc();
         }
 
         private void OpenMainMenu()
