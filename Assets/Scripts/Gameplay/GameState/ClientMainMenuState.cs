@@ -22,13 +22,13 @@ namespace Gameplay.GameState
     {
         public override global::Gameplay.GameState.GameState ActiveState { get { return GameState.MainMenu; } }
 
-        [SerializeField] NameGenerationData m_NameGenerationData;
-        [SerializeField] LobbyUIMediator m_LobbyUIMediator;
-        [SerializeField] IPUIMediator m_IPUIMediator;
-        [SerializeField] Button m_LobbyButton;
-        [SerializeField] GameObject m_SignInSpinner;
-        [SerializeField] UIProfileSelector m_UIProfileSelector;
-        [SerializeField] UITooltipDetector m_UGSSetupTooltipDetector;
+        // [SerializeField] NameGenerationData m_NameGenerationData;
+        // [SerializeField] LobbyUIMediator m_LobbyUIMediator;
+        // [SerializeField] IPUIMediator m_IPUIMediator;
+        // [SerializeField] Button m_LobbyButton;
+        // [SerializeField] GameObject m_SignInSpinner;
+        // [SerializeField] UIProfileSelector m_UIProfileSelector;
+        // [SerializeField] UITooltipDetector m_UGSSetupTooltipDetector;
 
         [Inject] AuthenticationServiceFacade m_AuthServiceFacade;
         [Inject] LocalLobbyUser m_LocalUser;
@@ -39,8 +39,8 @@ namespace Gameplay.GameState
         {
             base.Awake();
 
-            m_LobbyButton.interactable = false;
-            m_LobbyUIMediator.Hide();
+            // m_LobbyButton.interactable = false;
+            // m_LobbyUIMediator.Hide();
 
             if (string.IsNullOrEmpty(Application.cloudProjectId))
             {
@@ -51,13 +51,13 @@ namespace Gameplay.GameState
             TrySignIn();
         }
 
-        protected override void Configure(IContainerBuilder builder)
-        {
-            base.Configure(builder);
-            builder.RegisterComponent(m_NameGenerationData);
-            builder.RegisterComponent(m_LobbyUIMediator);
-            builder.RegisterComponent(m_IPUIMediator);
-        }
+        // protected override void Configure(IContainerBuilder builder)
+        // {
+        //     base.Configure(builder);
+        //     builder.RegisterComponent(m_NameGenerationData);
+        //     builder.RegisterComponent(m_LobbyUIMediator);
+        //     builder.RegisterComponent(m_IPUIMediator);
+        // }
 
 
         private async void TrySignIn()
@@ -83,9 +83,9 @@ namespace Gameplay.GameState
 
         private void OnAuthSignIn()
         {
-            m_LobbyButton.interactable = true;
-            m_UGSSetupTooltipDetector.enabled = false;
-            m_SignInSpinner.SetActive(false);
+            // m_LobbyButton.interactable = true;
+            // m_UGSSetupTooltipDetector.enabled = false;
+            // m_SignInSpinner.SetActive(false);
 
             Debug.Log($"Signed in. Unity Player ID {AuthenticationService.Instance.PlayerId}");
 
@@ -96,15 +96,16 @@ namespace Gameplay.GameState
 
         private void OnSignInFailed()
         {
-            if (m_LobbyButton)
-            {
-                m_LobbyButton.interactable = false;
-                m_UGSSetupTooltipDetector.enabled = true;
-            }
-            if (m_SignInSpinner)
-            {
-                m_SignInSpinner.SetActive(false);
-            }
+            Debug.Log("On sign in failed");
+            // if (m_LobbyButton)
+            // {
+            //     m_LobbyButton.interactable = false;
+            //     m_UGSSetupTooltipDetector.enabled = true;
+            // }
+            // if (m_SignInSpinner)
+            // {
+            //     m_SignInSpinner.SetActive(false);
+            // }
         }
 
         protected override void OnDestroy()
@@ -115,12 +116,12 @@ namespace Gameplay.GameState
 
         async void OnProfileChanged()
         {
-            m_LobbyButton.interactable = false;
-            m_SignInSpinner.SetActive(true);
+            // m_LobbyButton.interactable = false;
+            // m_SignInSpinner.SetActive(true);
             await m_AuthServiceFacade.SwitchProfileAndReSignInAsync(m_ProfileManager.Profile);
 
-            m_LobbyButton.interactable = true;
-            m_SignInSpinner.SetActive(false);
+            // m_LobbyButton.interactable = true;
+            // m_SignInSpinner.SetActive(false);
 
             Debug.Log($"Signed in. Unity Player ID {AuthenticationService.Instance.PlayerId}");
 
@@ -132,19 +133,19 @@ namespace Gameplay.GameState
 
         public void OnStartClicked()
         {
-            m_LobbyUIMediator.ToggleJoinLobbyUI();
-            m_LobbyUIMediator.Show();
+            // m_LobbyUIMediator.ToggleJoinLobbyUI();
+            // m_LobbyUIMediator.Show();
         }
 
         public void OnDirectIPClicked()
         {
-            m_LobbyUIMediator.Hide();
-            m_IPUIMediator.Show();
+            // m_LobbyUIMediator.Hide();
+            // m_IPUIMediator.Show();
         }
 
         public void OnChangeProfileClicked()
         {
-            m_UIProfileSelector.Show();
+            // m_UIProfileSelector.Show();
         }
     }
 }

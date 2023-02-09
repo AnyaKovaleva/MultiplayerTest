@@ -1,0 +1,93 @@
+.menu-button {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    width: 400px;
+    height: 100px;
+    font-size: 47px;
+    background-color: rgb(88, 88, 88);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-left-radius: 45px;
+    border-bottom-left-radius: 45px;
+    border-top-right-radius: 45px;
+    border-bottom-right-radius: 45px;
+    border-left-width: 4px;
+    border-right-width: 4px;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
+    color: rgb(255, 255, 255);
+}
+
+.menu-button:active {
+    border-left-color: rgb(0, 255, 1);
+    border-right-color: rgb(0, 255, 1);
+    border-top-color: rgb(0, 255, 1);
+    border-bottom-color: rgb(0, 255, 1);
+    border-left-width: 6px;
+    border-right-width: 6px;
+    border-top-width: 6px;
+    border-bottom-width: 6px;
+    color: rgb(0, 255, 1);
+}
+
+Label {
+    font-size: 30px;
+}
+
+.profile-button {
+    width: 200px;
+    height: 50px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: rgb(88, 88, 88);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+}
+
+.profile-button:active {
+    border-left-color: rgb(0, 255, 1);
+    border-right-color: rgb(0, 255, 1);
+    border-top-color: rgb(0, 255, 1);
+    border-bottom-color: rgb(0, 255, 1);
+    border-left-width: 4px;
+    border-right-width: 4px;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
+    color: rgb(0, 255, 1);
+}
+
+.lobby-button {
+    height: 80px;
+    width: 250px;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    font-size: 25px;
+}

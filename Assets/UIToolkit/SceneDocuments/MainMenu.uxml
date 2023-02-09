@@ -1,0 +1,37 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UIToolkit/StyleSheets/MainMenu.uss?fileID=7433441132597879392&amp;guid=0e1921d335c049543b39291a04f3dbca&amp;type=3#MainMenu" />
+    <ui:VisualElement style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);">
+        <ui:VisualElement name="MainMenu" style="position: absolute; width: 100%; height: 100%; align-items: center; justify-content: center;">
+            <ui:VisualElement style="margin-bottom: 50px;">
+                <ui:Label text="TicTac Toe" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); font-size: 100px;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="margin-top: 50px;">
+                <ui:Button text="Start Lobby" display-tooltip-when-elided="true" name="StartLobbyButton" class="menu-button" style="margin-bottom: 59px;" />
+                <ui:Button text="Change profile" display-tooltip-when-elided="true" name="ChangeProfileButton" class="menu-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="ProfilePannel" style="position: absolute; width: 100%; height: 100%; align-items: center; justify-content: center; background-color: rgb(0, 0, 0); display: none;">
+            <ui:Label text="username" display-tooltip-when-elided="true" name="UsernameLabel" style="margin-bottom: 50px;" />
+            <ui:VisualElement style="width: 500px; height: 150px; justify-content: space-around;">
+                <ui:TextField picking-mode="Ignore" label="Username" value="filler text" text="filler text" name="UsernameInputField" style="font-size: 23px;" />
+                <ui:TextField picking-mode="Ignore" label="Password" value="filler text" text="filler text" name="PasswordInputField" style="font-size: 23px;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row; justify-content: space-around; width: 550px; margin-top: 30px; margin-bottom: 50px;">
+                <ui:Button text="Sign in" display-tooltip-when-elided="true" name="SignInButton" class="profile-button" />
+                <ui:Button text="Sign up" display-tooltip-when-elided="true" name="SighUpButton" class="profile-button" />
+            </ui:VisualElement>
+            <ui:Label text="message" display-tooltip-when-elided="true" name="MessageLabel" />
+        </ui:VisualElement>
+        <ui:VisualElement name="LobbyPanel" style="position: absolute; width: 100%; height: 100%; background-color: rgb(0, 0, 0); flex-direction: row; justify-content: center;">
+            <ui:VisualElement style="align-items: center; justify-content: center; width: 50%;">
+                <ui:VisualElement style="height: 213px; justify-content: space-between;">
+                    <ui:Button text="Create game" display-tooltip-when-elided="true" name="CreateGameButton" class="profile-button lobby-button" />
+                    <ui:Button text="Join game" display-tooltip-when-elided="true" name="JoinGameButton" class="profile-button lobby-button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="width: 50%;">
+                <ui:Label text="Lobbies" display-tooltip-when-elided="true" name="LobbiesLabel" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
