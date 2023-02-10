@@ -74,6 +74,34 @@ namespace Views
                 }
             }
         }
+        public static void Open(Type viewType)
+        {
+            foreach (var view in _views)
+            {
+                if (view.GetType() == viewType)
+                {
+                    _currentlyOpened?.Close();
+
+                    view.Open();
+
+                    AddToHistory(view);
+
+                    if (_currentlyOpened != null)
+                    {
+                        ManageSortingLayers(_currentlyOpened.SortingLayer, view.SortingLayer);
+                    }
+                    else
+                    {
+                        HideSortingLayersAbove(view.SortingLayer);
+                        ShowSortingLayer(view.SortingLayer);
+                    }
+
+                    _currentlyOpened = view;
+
+                    return;
+                }
+            }
+        }
         
         public static void Open(ViewType viewType, Type type)
         {

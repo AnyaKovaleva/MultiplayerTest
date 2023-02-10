@@ -1,13 +1,27 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Interfaces.UI;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using UnityServices.Auth;
 using UnityServices.Lobbies;
 using Utils;
 using VContainer;
 using VContainer.Unity;
+using Views;
+using Views.ViewControllers;
+
+public class SomeCoolClass
+{
+    public void DoStuff()
+    {
+        Debug.Log("Do stuff");
+    }
+}
 
 namespace Gameplay.GameState
 {
@@ -20,7 +34,10 @@ namespace Gameplay.GameState
     /// </remarks>
     public class ClientMainMenuState : GameStateBehaviour
     {
-        public override global::Gameplay.GameState.GameState ActiveState { get { return GameState.MainMenu; } }
+        public override global::Gameplay.GameState.GameState ActiveState
+        {
+            get { return GameState.MainMenu; }
+        }
 
         // [SerializeField] NameGenerationData m_NameGenerationData;
         // [SerializeField] LobbyUIMediator m_LobbyUIMediator;
@@ -30,35 +47,68 @@ namespace Gameplay.GameState
         // [SerializeField] UIProfileSelector m_UIProfileSelector;
         // [SerializeField] UITooltipDetector m_UGSSetupTooltipDetector;
 
+        [SerializeField] private UIDocument _uiDocument;
+
         [Inject] AuthenticationServiceFacade m_AuthServiceFacade;
         [Inject] LocalLobbyUser m_LocalUser;
         [Inject] LocalLobby m_LocalLobby;
         [Inject] ProfileManager m_ProfileManager;
 
+        private MainMenuViewController _mainMenuView = new MainMenuViewController();
+        private LobbyViewController _lobbyView = new LobbyViewController();
+        private ProfileViewController _profileView = new ProfileViewController();
+        
         protected override void Awake()
         {
             base.Awake();
 
             // m_LobbyButton.interactable = false;
             // m_LobbyUIMediator.Hide();
+            //InitUI();
+            //ViewsController.Open(typeof(MainMenuViewController));
 
             if (string.IsNullOrEmpty(Application.cloudProjectId))
             {
                 OnSignInFailed();
                 return;
             }
-
-            TrySignIn();
+            
+            // TrySignIn();
         }
 
-        // protected override void Configure(IContainerBuilder builder)
-        // {
-        //     base.Configure(builder);
-        //     builder.RegisterComponent(m_NameGenerationData);
-        //     builder.RegisterComponent(m_LobbyUIMediator);
-        //     builder.RegisterComponent(m_IPUIMediator);
-        // }
+        protected override void Start()
+        {
+            base.Start();
 
+           // MainMenuViewController menuViewController = new MainMenuViewController();
+            //menuViewController.Open();
+            Wait();
+        }
+
+        private async Task Wait()
+        {
+            await Task.Delay(1000);
+            _mainMenuView.Open();
+        }
+
+        protected override void Configure(IContainerBuilder builder)
+        {
+            base.Configure(builder);
+            builder.RegisterComponentInHierarchy<UIDocument>();
+            builder.Register<SomeCoolClass>(Lifetime.Singleton);
+            builder.RegisterInstance(_mainMenuView);
+
+            // builder.RegisterComponent(m_LobbyUIMediator);
+            // builder.RegisterComponent(m_IPUIMediator);
+        }
+
+        private void InitUI()
+        {
+            // ViewsController.Initialize(
+            //     new List<IView>
+            //         { _mainMenuView, _profileView },
+            //     new List<SortingLayerView>());
+        }
 
         private async void TrySignIn()
         {

@@ -104,7 +104,7 @@ namespace Unity.Multiplayer.Samples.Utilities
         {
             if (!IsSpawned || NetworkManager.ShutdownInProgress)
             {
-                m_ClientLoadingScreen.StopLoadingScreen();
+              //  m_ClientLoadingScreen.StopLoadingScreen();
             }
         }
 

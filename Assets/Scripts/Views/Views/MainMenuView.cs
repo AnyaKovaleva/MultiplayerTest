@@ -5,7 +5,7 @@ namespace Views.Views
 {
     public class MainMenuView : View
     {
-        public Button StartLobbyButton { get; private set; }
+        public Button PlayButton { get; private set; }
         public Button ChangeProfileButton { get; private set; }
         
         public MainMenuView(UIDocument document) : base(document)
@@ -16,7 +16,7 @@ namespace Views.Views
         {
             Root = document.rootVisualElement.MapFieldToUI<VisualElement>("MainMenu");
 
-            StartLobbyButton = Root.MapFieldToUI<Button>("StartLobbyButton");
+            PlayButton = Root.MapFieldToUI<Button>("PlayButton");
             ChangeProfileButton = Root.MapFieldToUI<Button>("ChangeProfileButton");
         }
     }
