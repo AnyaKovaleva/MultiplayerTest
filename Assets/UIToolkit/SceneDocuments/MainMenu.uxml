@@ -10,7 +10,8 @@
                 <ui:Button text="Change profile" display-tooltip-when-elided="true" name="ChangeProfileButton" class="menu-button" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="ProfilePannel" style="position: absolute; width: 100%; height: 100%; align-items: center; justify-content: center; background-color: rgb(0, 0, 0); display: none;">
+        <ui:VisualElement name="ProfilePanel" style="position: absolute; width: 100%; height: 100%; align-items: center; justify-content: center; background-color: rgb(0, 0, 0); display: flex;">
+            <ui:Button text="X" display-tooltip-when-elided="true" name="ReturnButton" class="return-cross-button" />
             <ui:Label text="username" display-tooltip-when-elided="true" name="UsernameLabel" style="margin-bottom: 50px;" />
             <ui:VisualElement style="width: 500px; height: 150px; justify-content: space-around;">
                 <ui:TextField picking-mode="Ignore" label="Username" value="filler text" text="filler text" name="UsernameInputField" style="font-size: 23px;" />
@@ -18,20 +19,21 @@
             </ui:VisualElement>
             <ui:VisualElement style="flex-direction: row; justify-content: space-around; width: 550px; margin-top: 30px; margin-bottom: 50px;">
                 <ui:Button text="Sign in" display-tooltip-when-elided="true" name="SignInButton" class="profile-button" />
-                <ui:Button text="Sign up" display-tooltip-when-elided="true" name="SighUpButton" class="profile-button" />
+                <ui:Button text="Sign up" display-tooltip-when-elided="true" name="SignUpButton" class="profile-button" />
             </ui:VisualElement>
             <ui:Label text="message" display-tooltip-when-elided="true" name="MessageLabel" />
         </ui:VisualElement>
-        <ui:VisualElement name="LobbyPanel" style="position: absolute; width: 100%; height: 100%; background-color: rgb(0, 0, 0); flex-direction: row; justify-content: center; display: none;">
+        <ui:VisualElement name="LobbyPanel" style="position: absolute; width: 100%; height: 100%; background-color: rgb(0, 0, 0); flex-direction: row; justify-content: center; display: flex;">
             <ui:VisualElement style="align-items: center; justify-content: center; width: 50%;">
                 <ui:VisualElement style="height: 213px; justify-content: space-between;">
                     <ui:Button text="Create game" display-tooltip-when-elided="true" name="CreateGameButton" class="profile-button lobby-button" />
                     <ui:Button text="Join game" display-tooltip-when-elided="true" name="JoinGameButton" class="profile-button lobby-button" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement style="width: 50%;">
+            <ui:VisualElement style="width: 50%; justify-content: center;">
                 <ui:Label text="Lobbies" display-tooltip-when-elided="true" name="LobbiesLabel" />
             </ui:VisualElement>
+            <ui:Button text="X" display-tooltip-when-elided="true" name="ReturnButton" class="return-cross-button" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

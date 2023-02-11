@@ -9,13 +9,8 @@ namespace Views
         public View(UIDocument document)
         {
             MapFieldsToUI(document);
-            SetPlaceholders();
         }
 
         public abstract void MapFieldsToUI(UIDocument document);
-
-        protected virtual void SetPlaceholders()
-        {
-        }
     }
 }

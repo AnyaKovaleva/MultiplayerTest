@@ -40,6 +40,7 @@
 
 Label {
     font-size: 30px;
+    color: rgba(255, 255, 255, 255);
 }
 
 .profile-button {
@@ -90,4 +91,47 @@ Label {
     border-top-right-radius: 40px;
     border-bottom-right-radius: 40px;
     font-size: 25px;
+}
+
+.return-cross-button {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    top: 30px;
+    right: 30px;
+    font-size: 43px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    -unity-font-style: bold;
+    color: rgba(255, 255, 255, 255);
+    border-left-color: rgba(255, 255, 255, 255);
+    border-right-color: rgba(255, 255, 255, 255);
+    border-top-color: rgba(255, 255, 255, 255);
+    border-bottom-color: rgba(255, 255, 255, 255);
+    border-top-left-radius: 63px;
+    border-bottom-left-radius: 63px;
+    border-top-right-radius: 63px;
+    border-bottom-right-radius: 63px;
+    border-left-width: 4px;
+    border-right-width: 4px;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
+}
+
+.return-cross-button:active {
+    color: rgba(255, 0, 0, 255);
+    border-left-color: rgba(255, 0, 0, 255);
+    border-right-color: rgba(255, 0, 0, 255);
+    border-top-color: rgba(255, 0, 0, 255);
+    border-bottom-color: rgba(255, 0, 0, 255);
+    border-left-width: 6px;
+    border-right-width: 6px;
+    border-top-width: 6px;
+    border-bottom-width: 6px;
 }

@@ -1,30 +1,33 @@
 ﻿using Enums.UI;
 using Interfaces.UI;
+using UnityEngine.UIElements;
+using VContainer;
+using Views.Views;
 
 namespace Views.ViewControllers
 {
-    public class LobbyViewController : IView
+    public class LobbyViewController : ViewController, IView
     {
-        public SortingLayer SortingLayer { get; }
-        public ViewType Type { get; }
-        public void Open()
+        public SortingLayer SortingLayer => SortingLayer.MAIN_MENU;
+
+        private LobbyView _view;
+
+        public override void InjectDependenciesAndInitialize(UIDocument document)
         {
-            throw new System.NotImplementedException();
+            _view = new LobbyView(document);
+            base.Initialize(_view);
         }
 
-        public void Close()
+        protected override void InitButtonEvents()
         {
-            throw new System.NotImplementedException();
+            _view.CreateGameButton.clicked += CreateGame;
+            _view.JoinGameButton.clicked += JoinGame;
         }
-
-        public void InitButtonEvents()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void InitLocalization()
-        {
-            throw new System.NotImplementedException();
-        }
+        
+        private void CreateGame()
+        {}
+        
+        private void JoinGame()
+        {}
     }
 }

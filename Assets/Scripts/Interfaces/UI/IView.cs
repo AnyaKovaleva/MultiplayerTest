@@ -1,4 +1,6 @@
 ﻿using Enums.UI;
+using UnityEngine.UIElements;
+using VContainer;
 
 namespace Interfaces.UI
 {
@@ -6,12 +8,7 @@ namespace Interfaces.UI
     {
         public SortingLayer SortingLayer { get; }
         public ViewType Type { get; }
-
         public void Open();
         public void Close();
-        
-        //TODO: move to protected?
-        public void InitButtonEvents();
-        public void InitLocalization();
     }
 }

@@ -61,7 +61,6 @@ namespace Gameplay.GameState
                 Parent.Container.Inject(this);
             }
         }
-
         // Start is called before the first frame update
         protected virtual void Start()
         {
