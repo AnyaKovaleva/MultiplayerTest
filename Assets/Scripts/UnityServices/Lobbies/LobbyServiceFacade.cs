@@ -282,6 +282,7 @@ namespace UnityServices.Lobbies
             try
             {
                 var response = await m_LobbyApiInterface.QueryAllLobbies();
+                Debug.Log("lobies count " + response.Results.Count);
                 m_LobbyListFetchedPub.Publish(new LobbyListFetchedMessage(LocalLobby.CreateLocalLobbies(response)));
             }
             catch (LobbyServiceException e)

@@ -28,7 +28,7 @@ namespace ConnectionManagement.ConnectionState
 
             //The "BossRoom" server always advances to CharSelect immediately on start. Different games
             //may do this differently.
-            SceneLoaderWrapper.Instance.LoadScene("CharSelect", useNetworkSceneManager: true);
+            SceneLoaderWrapper.Instance.LoadScene("ChooseSideScene", useNetworkSceneManager: true);
 
             if (m_LobbyServiceFacade.CurrentUnityLobby != null)
             {

@@ -40,7 +40,7 @@
 
 Label {
     font-size: 30px;
-    color: rgba(255, 255, 255, 255);
+    color: rgb(255, 255, 255);
 }
 
 .profile-button {
@@ -109,11 +109,11 @@ Label {
     padding-top: 0;
     padding-bottom: 0;
     -unity-font-style: bold;
-    color: rgba(255, 255, 255, 255);
-    border-left-color: rgba(255, 255, 255, 255);
-    border-right-color: rgba(255, 255, 255, 255);
-    border-top-color: rgba(255, 255, 255, 255);
-    border-bottom-color: rgba(255, 255, 255, 255);
+    color: rgb(255, 255, 255);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
     border-top-left-radius: 63px;
     border-bottom-left-radius: 63px;
     border-top-right-radius: 63px;
@@ -122,16 +122,50 @@ Label {
     border-right-width: 4px;
     border-top-width: 4px;
     border-bottom-width: 4px;
+    background-color: rgb(88, 88, 88);
 }
 
 .return-cross-button:active {
-    color: rgba(255, 0, 0, 255);
-    border-left-color: rgba(255, 0, 0, 255);
-    border-right-color: rgba(255, 0, 0, 255);
-    border-top-color: rgba(255, 0, 0, 255);
-    border-bottom-color: rgba(255, 0, 0, 255);
+    color: rgb(255, 0, 0);
+    border-left-color: rgb(255, 0, 0);
+    border-right-color: rgb(255, 0, 0);
+    border-top-color: rgb(255, 0, 0);
+    border-bottom-color: rgb(255, 0, 0);
     border-left-width: 6px;
     border-right-width: 6px;
     border-top-width: 6px;
     border-bottom-width: 6px;
+}
+
+#IsPrivateToggle #unity-checkmark {
+    width: 45px;
+    height: 45px;
+}
+
+#unity-text-input {
+    background-color: rgb(88, 88, 88);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+}
+
+.choose-side-button {
+    width: 270px;
+    height: 100px;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-left-width: 6px;
+    border-right-width: 6px;
+    border-top-width: 6px;
+    border-bottom-width: 6px;
+}
+
+.choose-side-button:active {
+    border-left-width: 10px;
+    border-right-width: 10px;
+    border-top-width: 10px;
+    border-bottom-width: 10px;
 }

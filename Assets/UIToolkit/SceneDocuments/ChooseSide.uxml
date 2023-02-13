@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UIToolkit/StyleSheets/Common.uss?fileID=7433441132597879392&amp;guid=0e1921d335c049543b39291a04f3dbca&amp;type=3#Common" />
+    <ui:VisualElement style="position: absolute; width: 100%; height: 100%; background-color: rgb(0, 0, 0);">
+        <ui:VisualElement name="ChooseSidePanel" style="position: absolute; width: 100%; height: 100%; justify-content: center;">
+            <ui:VisualElement style="top: 0; position: absolute; width: 100%; flex-direction: row; justify-content: space-between; padding-left: 30px; padding-right: 30px; padding-top: 30px; padding-bottom: 0;">
+                <ui:VisualElement style="align-items: center;">
+                    <ui:VisualElement style="flex-direction: row; margin-bottom: 20px;">
+                        <ui:Label text="Join code:" display-tooltip-when-elided="true" style="margin-right: 15px;" />
+                        <ui:Label text="2346fgvbh" display-tooltip-when-elided="true" name="JoinCodeLabel" />
+                    </ui:VisualElement>
+                    <ui:Button text="Copy to clipboard" display-tooltip-when-elided="true" name="CopyCodeButton" class="profile-button" />
+                </ui:VisualElement>
+                <ui:Button text="X" display-tooltip-when-elided="true" name="QuitButton" class="return-cross-button" />
+            </ui:VisualElement>
+            <ui:VisualElement style="align-items: center;">
+                <ui:Label text="Choose  side" display-tooltip-when-elided="true" style="font-size: 74px; margin-bottom: 50px;" />
+                <ui:Button text="X" display-tooltip-when-elided="true" name="XButton" class="profile-button choose-side-button" style="-unity-font-style: bold; font-size: 60px; margin-bottom: 30px;" />
+                <ui:Button text="O" display-tooltip-when-elided="true" name="OButton" class="profile-button choose-side-button" style="-unity-font-style: bold; font-size: 60px;" />
+            </ui:VisualElement>
+            <ui:Label text="message" display-tooltip-when-elided="true" name="MessageLabel" style="-unity-text-align: upper-center; position: absolute; width: 100%; bottom: 89px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

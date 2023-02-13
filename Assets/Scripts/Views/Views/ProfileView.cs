@@ -20,9 +20,9 @@ namespace Views.Views
         {
         }
 
-        public override void MapFieldsToUI(UIDocument document)
+        public override void MapFieldsToUI(VisualElement root)
         {
-            Root = document.rootVisualElement.MapFieldToUI<VisualElement>("ProfilePanel");
+            Root = root.MapFieldToUI<VisualElement>("ProfilePanel");
 
             ReturnButton = new ReturnButton(Root);
 

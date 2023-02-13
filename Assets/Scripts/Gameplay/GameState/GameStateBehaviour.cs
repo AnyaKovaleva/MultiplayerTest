@@ -6,6 +6,7 @@ namespace Gameplay.GameState
     public enum GameState
     {
         MainMenu,
+        ChooseSide,
         TicTacToe,
         PostGame
     }

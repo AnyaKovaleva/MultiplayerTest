@@ -12,9 +12,9 @@ namespace Views.Views
         {
         }
 
-        public override void MapFieldsToUI(UIDocument document)
+        public override void MapFieldsToUI(VisualElement root)
         {
-            Root = document.rootVisualElement.MapFieldToUI<VisualElement>("MainMenu");
+            Root = root.MapFieldToUI<VisualElement>("MainMenu");
 
             PlayButton = Root.MapFieldToUI<Button>("PlayButton");
             ChangeProfileButton = Root.MapFieldToUI<Button>("ChangeProfileButton");
