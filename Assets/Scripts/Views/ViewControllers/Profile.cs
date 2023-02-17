@@ -1,4 +1,5 @@
-﻿using Interfaces.UI;
+﻿using System;
+using Interfaces.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Utils;
@@ -8,7 +9,7 @@ using SortingLayer = Enums.UI.SortingLayer;
 
 namespace Views.ViewControllers
 {
-    public class Profile : ViewController, IView
+    public class Profile : ViewController, IView, IDisposable
     {
         public SortingLayer SortingLayer => SortingLayer.MAIN_MENU;
 
@@ -44,6 +45,10 @@ namespace Views.ViewControllers
             Debug.Log("profile updated");
             _view.Username.text = _profileManager.Profile;
         }
-            
+
+        public void Dispose()
+        {
+            _profileManager.onProfileChanged -= UpdateUsernameLabel;
+        }
     }
 }

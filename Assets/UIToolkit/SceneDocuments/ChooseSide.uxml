@@ -12,10 +12,13 @@
                 </ui:VisualElement>
                 <ui:Button text="X" display-tooltip-when-elided="true" name="QuitButton" class="return-cross-button" />
             </ui:VisualElement>
-            <ui:VisualElement style="align-items: center;">
+            <ui:VisualElement style="align-items: center; margin-bottom: 35px;">
                 <ui:Label text="Choose  side" display-tooltip-when-elided="true" style="font-size: 74px; margin-bottom: 50px;" />
                 <ui:Button text="X" display-tooltip-when-elided="true" name="XButton" class="profile-button choose-side-button" style="-unity-font-style: bold; font-size: 60px; margin-bottom: 30px;" />
                 <ui:Button text="O" display-tooltip-when-elided="true" name="OButton" class="profile-button choose-side-button" style="-unity-font-style: bold; font-size: 60px;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="align-items: center;">
+                <ui:Button text="Ready!" display-tooltip-when-elided="true" name="ReadyButton" class="profile-button" style="font-size: 27px;" />
             </ui:VisualElement>
             <ui:Label text="message" display-tooltip-when-elided="true" name="MessageLabel" style="-unity-text-align: upper-center; position: absolute; width: 100%; bottom: 89px;" />
         </ui:VisualElement>

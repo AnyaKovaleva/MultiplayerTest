@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Interfaces.UI;
+using UnityEngine;
 using UnityEngine.UIElements;
 using VContainer;
 using VContainer.Unity;
@@ -9,44 +10,39 @@ using Views.ViewControllers;
 
 namespace Initializers
 {
-    public class MainMenuUIInitializer : IStartable
+    public class MainMenuUIInitializer : UIInitializer
     {
         private MainMenu _mainMenuView = new MainMenu();
         private LobbyViewController _lobbyView = new LobbyViewController();
         private Profile _profileView = new Profile();
 
-        [Inject] LifetimeScope serviceScope;
-
-        // [Inject]
-        // private void Construct()
-        // {
-        //   //  builder.RegisterBuildCallback(InjectViews);
-        // }
-
-        public void Start()
+        protected override void InjectDependencies()
         {
-            InitializeViews();
-            ViewsController.Open(typeof(MainMenu));
+            Inject(_mainMenuView);
+            Inject(_lobbyView);
+            Inject(_profileView);
         }
 
-        private void InitializeViews()
+        protected override void InitializeViewsController()
         {
-            InjectDependencies();
-
             ViewsController.Initialize(new List<IView>()
             {
                 _mainMenuView,
                 _lobbyView,
                 _profileView
             }, new List<SortingLayerView>());
-            
         }
 
-        private void InjectDependencies()
+        protected override void OpenStartView()
         {
-            serviceScope.Container.Inject(_mainMenuView);
-            serviceScope.Container.Inject(_lobbyView);
-            serviceScope.Container.Inject(_profileView);
+            ViewsController.Open(typeof(MainMenu));
+        }
+
+        public override void Dispose()
+        {
+            Debug.Log("Disposing MainMenu UI Initializer");
+            _lobbyView.Dispose();
+            _profileView.Dispose();
         }
     }
 }

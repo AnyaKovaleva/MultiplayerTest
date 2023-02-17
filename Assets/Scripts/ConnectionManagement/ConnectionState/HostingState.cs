@@ -43,11 +43,13 @@ namespace ConnectionManagement.ConnectionState
 
         public override void OnClientConnected(ulong clientId)
         {
+            Debug.Log("Hosting state client connected " + clientId);
             m_ConnectionEventPublisher.Publish(new ConnectionEventMessage() { ConnectStatus = ConnectStatus.Success, PlayerName = SessionManager<SessionPlayerData>.Instance.GetPlayerData(clientId)?.PlayerName });
         }
 
         public override void OnClientDisconnect(ulong clientId)
         {
+            Debug.Log("Hosting state client DISconnected " + clientId);
             if (clientId == m_ConnectionManager.NetworkManager.LocalClientId)
             {
                 m_ConnectionManager.ChangeState(m_ConnectionManager.m_Offline);
@@ -118,7 +120,7 @@ namespace ConnectionManagement.ConnectionState
 
                 // connection approval will create a player object for you
                 response.Approved = true;
-                response.CreatePlayerObject = false;
+                response.CreatePlayerObject = true;
                 // response.Position = Vector3.zero;
                 // response.Rotation = Quaternion.identity;
                 return;

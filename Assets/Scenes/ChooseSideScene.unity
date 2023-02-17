@@ -187,6 +187,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224130951485110974, guid: 9ed2a051c32b4fe47a5e4fb95c20b03f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224130951485110974, guid: 9ed2a051c32b4fe47a5e4fb95c20b03f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -0.000030517578
       objectReference: {fileID: 0}
@@ -695,8 +699,8 @@ MonoBehaviour:
     TypeName: ApplicationLifecycle.ApplicationController
   autoRun: 1
   autoInjectGameObjects: []
-  _netcodeHooks: {fileID: 0}
-  _networkChooseSide: {fileID: 0}
+  _netcodeHooks: {fileID: 843158052}
+  _networkChooseSide: {fileID: 843158051}
 --- !u!114 &843158051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -752,7 +756,8 @@ MonoBehaviour:
     TypeName: ApplicationLifecycle.ApplicationController
   autoRun: 1
   autoInjectGameObjects: []
-  m_NetcodeHooks: {fileID: 0}
+  _networkSideSelection: {fileID: 843158051}
+  m_NetcodeHooks: {fileID: 843158052}
 --- !u!1 &1693420954
 GameObject:
   m_ObjectHideFlags: 0

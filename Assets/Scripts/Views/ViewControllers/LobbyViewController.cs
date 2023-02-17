@@ -122,7 +122,7 @@ namespace Views.ViewControllers
 
         public void Dispose()
         {
-            Debug.Log("Disposing");
+            Debug.LogWarning("Disposing Lobby");
             _connectStatusSubscriber?.Unsubscribe(OnConnectStatus);
             if (_updateRunner != null)
             {
@@ -134,6 +134,11 @@ namespace Views.ViewControllers
 
         void UpdateLobbyList(LobbyListFetchedMessage message)
         {
+            if (_view == null)
+            {
+                Debug.LogError("Lobby view is null but trying to send update lobby  list  event");
+                return;
+            }
             //EnsureNumberOfActiveUISlots(message.LocalLobbies.Count);
 
             string lobbies = "";

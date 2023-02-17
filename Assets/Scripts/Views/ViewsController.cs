@@ -29,6 +29,8 @@ namespace Views
 
         public static void Initialize(List<IView> views, List<SortingLayerView> sortingLayers)
         {
+            DeInitialize();
+            
             _views = views;
             _sortingLayers = sortingLayers;
 
@@ -43,9 +45,9 @@ namespace Views
 
         public static void DeInitialize()
         {
-            _views.Clear();
-            _sortingLayers.Clear();
-            _history.Clear();
+            _views?.Clear();
+            _sortingLayers?.Clear();
+            _history?.Clear();
         }
 
         private static void HideAllViews()

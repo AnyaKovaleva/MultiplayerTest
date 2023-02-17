@@ -38,7 +38,7 @@ namespace Gameplay.GameState
         [Inject] LocalLobby m_LocalLobby;
         [Inject] ProfileManager m_ProfileManager;
 
-        
+
         protected override void Awake()
         {
             base.Awake();
@@ -57,7 +57,7 @@ namespace Gameplay.GameState
             
             TrySignIn();
         }
-
+        
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -117,6 +117,7 @@ namespace Gameplay.GameState
 
         protected override void OnDestroy()
         {
+            Debug.Log("Destroying");
             m_ProfileManager.onProfileChanged -= OnProfileChanged;
             base.OnDestroy();
         }
