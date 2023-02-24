@@ -97,9 +97,14 @@ namespace Gameplay.GameState
         
         void UpdatePlayerCount()
         {
+            if (_chooseSideUI == null)
+            {
+                Debug.Log("choose side ui is not initialized yet");
+                return;
+            }
             int count = _networkSideSelection.LobbyPlayers.Count;
             var pstr = (count > 1) ? "players" : "player";
-            Debug.Log("<b>" + count + "</b> " + pstr + " connected");
+            _chooseSideUI.NumPlayersText = "<b>" + count + "</b> " + pstr + " connected";
         }
         
         /// <summary>
@@ -153,6 +158,7 @@ namespace Gameplay.GameState
         
          public void ConfigureUIForLobbyMode(ClientChooseSideState.LobbyMode mode)
         {
+            _chooseSideUI.UpdateLobbyState(mode);
             // that finishes the easy bit. Next, each lobby mode might also need to configure the lobby seats and class-info box.
             bool isSeatsDisabledInThisMode = false;
             switch (mode)

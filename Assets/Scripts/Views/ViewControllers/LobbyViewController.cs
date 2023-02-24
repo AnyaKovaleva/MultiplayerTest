@@ -3,6 +3,7 @@ using ConnectionManagement;
 using Infrastructure;
 using Infrastructure.PubSub;
 using Interfaces.UI;
+using QFSW.QC;
 using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -33,6 +34,8 @@ namespace Views.ViewControllers
         ISubscriber<LobbyListFetchedMessage> _localLobbiesRefreshedSub;
 
         const string _defaultLobbyName = "no-name";
+
+        private static LobbyViewController _instance; //to use static functions in  QuantumConsole
 
         [Inject]
         void InjectDependenciesAndInitialize(
@@ -68,6 +71,8 @@ namespace Views.ViewControllers
             base.Initialize(_view);
             
             RegenerateName();
+
+            _instance = this;
         }
 
         public override void Open()
@@ -111,9 +116,73 @@ namespace Views.ViewControllers
 
         private void JoinGame()
         {
-            
+            QuickJoin();
         }
 
+        private async void QuickJoin()
+        {
+            BlockUIWhileLoadingIsInProgress();
+
+            bool playerIsAuthorized = await _authenticationServiceFacade.EnsurePlayerIsAuthorized();
+
+            if (!playerIsAuthorized)
+            {
+                UnblockUIAfterLoadingIsComplete();
+                return;
+            }
+
+            var result = await _lobbyServiceFacade.TryQuickJoinLobbyAsync();
+
+            if (result.Success)
+            {
+                OnJoinedLobby(result.Lobby);
+            }
+            else
+            {
+                UnblockUIAfterLoadingIsComplete();
+            }
+        }
+
+        [Command("join-with-code")]
+        public static void JoinWithCodeCommand(string lobbyCode)
+        {
+            Debug.Log("join lobby command called");
+            _instance.JoinLobbyWithCodeRequest(lobbyCode);
+        }
+        
+        public async void JoinLobbyWithCodeRequest(string lobbyCode)
+        {
+            Debug.Log("lobbycode "+ lobbyCode);
+            BlockUIWhileLoadingIsInProgress();
+
+            bool playerIsAuthorized = await _authenticationServiceFacade.EnsurePlayerIsAuthorized();
+
+            if (!playerIsAuthorized)
+            {
+                UnblockUIAfterLoadingIsComplete();
+                return;
+            }
+
+            var result = await _lobbyServiceFacade.TryJoinLobbyAsync(null, lobbyCode);
+
+            if (result.Success)
+            {
+                OnJoinedLobby(result.Lobby);
+            }
+            else
+            {
+                UnblockUIAfterLoadingIsComplete();
+            }
+        }
+
+        void OnJoinedLobby(Unity.Services.Lobbies.Models.Lobby remoteLobby)
+        {
+            _lobbyServiceFacade.SetRemoteLobby(remoteLobby);
+
+            Debug.Log($"Joined lobby with code: {_localLobby.LobbyCode}, Internal Relay Join Code{_localLobby.RelayJoinCode}");
+            _connectionManager.StartClientLobby(_localUser.DisplayName);
+        }
+        
         public void RegenerateName()
         {
             _localUser.DisplayName = Random.Range(1, 1000).ToString();

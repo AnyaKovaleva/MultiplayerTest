@@ -36,12 +36,14 @@ namespace ConnectionManagement.ConnectionState
 
         public override void OnClientConnected(ulong _)
         {
+            Debug.Log("client connected");
             m_ConnectStatusPublisher.Publish(ConnectStatus.Success);
             m_ConnectionManager.ChangeState(m_ConnectionManager.m_ClientConnected);
         }
 
         public override void OnClientDisconnect(ulong _)
         {
+            Debug.Log("client disconnected");
             // client ID is for sure ours here
             StartingClientFailedAsync();
         }

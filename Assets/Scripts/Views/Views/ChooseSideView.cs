@@ -14,6 +14,8 @@ namespace Views.Views
         public Button ReadyButton { get; private set; }
         
         public Label MessageLabel { get; private set; }
+        public Label LobbyStateLabel { get; private set; }
+        public Label NumPlayersLabel { get; private set; }
 
         public ChooseSideView(UIDocument document) : base(document)
         {
@@ -34,6 +36,9 @@ namespace Views.Views
             ReadyButton = Root.Q<Button>("ReadyButton");
             
             MessageLabel = Root.Q<Label>("MessageLabel");
+            
+            LobbyStateLabel = Root.Q<Label>("LobbyStateLabel");
+            NumPlayersLabel = Root.Q<Label>("NumPlayersLabel");
 
         }
     }
