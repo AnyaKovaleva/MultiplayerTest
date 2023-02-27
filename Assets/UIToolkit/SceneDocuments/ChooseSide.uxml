@@ -20,8 +20,16 @@
             </ui:VisualElement>
             <ui:VisualElement style="align-items: center; margin-bottom: 35px;">
                 <ui:Label text="Choose  side" display-tooltip-when-elided="true" style="font-size: 74px; margin-bottom: 50px;" />
-                <ui:Button text="X" display-tooltip-when-elided="true" name="XButton" class="profile-button choose-side-button" style="-unity-font-style: bold; font-size: 60px; margin-bottom: 30px;" />
-                <ui:Button text="O" display-tooltip-when-elided="true" name="OButton" class="profile-button choose-side-button" style="-unity-font-style: bold; font-size: 60px;" />
+                <ui:VisualElement name="XButton" style="flex-direction: row;">
+                    <ui:Label text="player 1" display-tooltip-when-elided="true" name="PlayerNumberLabel" style="width: 100px; white-space: normal; -unity-text-align: upper-center;" />
+                    <ui:Button text="X" display-tooltip-when-elided="true" class="profile-button choose-side-button" style="-unity-font-style: bold; font-size: 60px; margin-bottom: 30px;" />
+                    <ui:Label text="name" display-tooltip-when-elided="true" name="PlayerNameLabel" style="width: 100px; white-space: normal; -unity-text-align: upper-center;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="OButton" style="flex-direction: row;">
+                    <ui:Label text="player 1" display-tooltip-when-elided="true" name="PlayerNumberLabel" style="width: 100px; white-space: normal; -unity-text-align: upper-center;" />
+                    <ui:Button text="O" display-tooltip-when-elided="true" class="profile-button choose-side-button" style="-unity-font-style: bold; font-size: 60px;" />
+                    <ui:Label text="name" display-tooltip-when-elided="true" name="PlayerNameLabel" style="width: 100px; white-space: normal; -unity-text-align: upper-center;" />
+                </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement style="align-items: center;">
                 <ui:Button text="Ready!" display-tooltip-when-elided="true" name="ReadyButton" class="profile-button" style="font-size: 27px;" />

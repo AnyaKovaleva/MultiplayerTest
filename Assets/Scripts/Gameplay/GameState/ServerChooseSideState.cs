@@ -42,7 +42,7 @@ namespace Gameplay.GameState
             }
         }
 
-        void OnClientChangedSeat(ulong clientId, int newSeatIdx, bool lockedIn)
+        void OnClientChangedSeat(ulong clientId, NetworkChooseSide.SeatType newSeatType, bool lockedIn)
         {
             int idx = FindLobbyPlayerIdx(clientId);
             if (idx == -1)
@@ -56,7 +56,7 @@ namespace Gameplay.GameState
                 return;
             }
 
-            if (newSeatIdx == -1)
+            if (newSeatType == NetworkChooseSide.SeatType.NONE)
             {
                 // we can't lock in with no seat
                 lockedIn = false;
@@ -66,7 +66,7 @@ namespace Gameplay.GameState
                 // see if someone has already locked-in that seat! If so, too late... discard this choice
                 foreach (NetworkChooseSide.LobbyPlayerState playerInfo in _networkChooseSide.LobbyPlayers)
                 {
-                    if (playerInfo.ClientId != clientId && playerInfo.SeatIdx == newSeatIdx && playerInfo.SeatState == NetworkChooseSide.SeatState.LockedIn)
+                    if (playerInfo.ClientId != clientId && playerInfo.SeatType == newSeatType && playerInfo.SeatState == NetworkChooseSide.SeatState.LockedIn)
                     {
                         // somebody already locked this choice in. Stop!
                         // Instead of granting lock request, change this player to Inactive state.
@@ -85,7 +85,7 @@ namespace Gameplay.GameState
                 _networkChooseSide.LobbyPlayers[idx].PlayerName,
                 _networkChooseSide.LobbyPlayers[idx].PlayerNumber,
                 lockedIn ? NetworkChooseSide.SeatState.LockedIn : NetworkChooseSide.SeatState.Active,
-                newSeatIdx,
+                newSeatType,
                 Time.time);
 
             if (lockedIn)
@@ -94,7 +94,7 @@ namespace Gameplay.GameState
                 // who were also in that seat. (Those players didn't click "Ready!" fast enough, somebody else took their seat!)
                 for (int i = 0; i < _networkChooseSide.LobbyPlayers.Count; ++i)
                 {
-                    if (_networkChooseSide.LobbyPlayers[i].SeatIdx == newSeatIdx && i != idx)
+                    if (_networkChooseSide.LobbyPlayers[i].SeatType == newSeatType && i != idx)
                     {
                         // change this player to Inactive state.
                         _networkChooseSide.LobbyPlayers[i] = new NetworkChooseSide.LobbyPlayerState(

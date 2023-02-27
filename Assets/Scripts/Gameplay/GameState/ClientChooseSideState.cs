@@ -14,6 +14,8 @@ namespace Gameplay.GameState
     [RequireComponent(typeof(NetcodeHooks))]
     public class ClientChooseSideState : GameStateBehaviour
     {
+        public static ClientChooseSideState Instance { get; private set; }
+        
         [SerializeField]
         NetworkChooseSide _networkSideSelection;
         public override GameState ActiveState
@@ -29,7 +31,7 @@ namespace Gameplay.GameState
         private ChooseSide _chooseSideUI => ChooseSideUIInitializer.Instance.ChooseSide;
         
         
-        int _lastSeatSelected = -1;
+        NetworkChooseSide.SeatType _lastSeatSelected = NetworkChooseSide.SeatType.NONE;
         bool _hasLocalPlayerLockedIn = false;
         
         /// <summary>
@@ -48,6 +50,8 @@ namespace Gameplay.GameState
         protected override void Awake()
         {
             base.Awake();
+
+            Instance = this;
             
             m_NetcodeHooks.OnNetworkSpawnHook += OnNetworkSpawn;
             m_NetcodeHooks.OnNetworkDespawnHook += OnNetworkDespawn;
@@ -336,7 +340,17 @@ namespace Gameplay.GameState
              {
                  _networkSideSelection.ChangeSeatServerRpc(NetworkManager.Singleton.LocalClientId, seatIdx, false);
              }
+         } 
+         
+         public void OnPlayerClickedSeat(NetworkChooseSide.SeatType seatType)
+         {
+             if (_networkSideSelection.IsSpawned)
+             {
+                 _networkSideSelection.ChangeSeatServerRpc(NetworkManager.Singleton.LocalClientId, seatType, false);
+             }
          }
+         
+         
 
          /// <summary>
          /// Called directly by UI elements!

@@ -8,8 +8,8 @@ namespace Views.Views
         public Button CopyCodeButton { get; private set; }
         public Button QuitButton { get; private set; }
         
-        public Button XButton { get; private set; }
-        public Button OButton { get; private set; }
+        public VisualElement XButton { get; private set; }
+        public VisualElement OButton { get; private set; }
         
         public Button ReadyButton { get; private set; }
         
@@ -30,8 +30,8 @@ namespace Views.Views
             CopyCodeButton = Root.Q<Button>("CopyCodeButton");
             QuitButton = Root.Q<Button>("QuitButton");
             
-            XButton = Root.Q<Button>("XButton");
-            OButton = Root.Q<Button>("OButton");
+            XButton = Root.Q<VisualElement>("XButton");
+            OButton = Root.Q<VisualElement>("OButton");
             
             ReadyButton = Root.Q<Button>("ReadyButton");
             

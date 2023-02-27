@@ -1,4 +1,5 @@
-﻿using ConnectionManagement;
+﻿using System.Collections.Generic;
+using ConnectionManagement;
 using Gameplay.GameState;
 using Interfaces.UI;
 using Unity.Multiplayer.Samples.Utilities;
@@ -7,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using UnityServices.Lobbies;
 using VContainer;
+using Views.Components;
 using Views.Views;
 using SortingLayer = Enums.UI.SortingLayer;
 
@@ -25,14 +27,19 @@ namespace Views.ViewControllers
 
         [Inject] private ClientChooseSideState _chooseSide;
         [Inject] private ConnectionManager _connectionManager;
-        [Inject] protected LocalLobby _localLobby;
-        
+        [Inject] private LocalLobby _localLobby;
+
+        public List<ChooseSideSeat> _seats { get; private set; } = new List<ChooseSideSeat>();
+
         public override void InjectDependenciesAndInitialize(UIDocument document)
         {
             _view = new ChooseSideView(document);
             base.Initialize(_view);
 
             _view.JoinCodeLabel.text = _localLobby.LobbyCode;
+            
+            _seats.Add(new ChooseSideSeat(_view.XButton, NetworkChooseSide.SeatType.X));
+            _seats.Add(new ChooseSideSeat(_view.OButton, NetworkChooseSide.SeatType.O));
         }
 
         public void SetMessageText(string text)
@@ -48,8 +55,6 @@ namespace Views.ViewControllers
         {
             _view.CopyCodeButton.clicked += CopyCodeToClipboard;
             _view.QuitButton.clicked += QuitLobby;
-            _view.XButton.clicked += ChooseX;
-            _view.OButton.clicked += ChooseO;
             _view.ReadyButton.clicked += PlayerReady;
         }
 
@@ -62,17 +67,6 @@ namespace Views.ViewControllers
         {
             Debug.Log("clicked quit button");
             _connectionManager.RequestShutdown();
-           // SceneManager.LoadScene("MainMenu");
-        }
-
-        private void ChooseX()
-        {
-            _chooseSide.OnPlayerClickedSeat(1);
-        }
-
-        private void ChooseO()
-        {
-            _chooseSide.OnPlayerClickedSeat(2);
         }
 
         private void PlayerReady()

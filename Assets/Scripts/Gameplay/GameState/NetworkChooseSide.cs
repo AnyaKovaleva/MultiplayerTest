@@ -11,6 +11,12 @@ namespace Gameplay.GameState
             Inactive,
             Active,
             LockedIn,
+        } 
+         public enum SeatType : byte
+        {
+            NONE,
+            X,
+            O
         }
         
         /// <summary>
@@ -23,18 +29,18 @@ namespace Gameplay.GameState
             private FixedPlayerName m_PlayerName; // I'm sad there's no 256Bytes fixed list :(
 
             public int PlayerNumber; // this player's assigned "P#". (0=P1, 1=P2, etc.)
-            public int SeatIdx; // the latest seat they were in. -1 means none
+            public SeatType SeatType; // the latest seat they were in. -1 means none
             public float LastChangeTime;
 
             public SeatState SeatState;
 
 
-            public LobbyPlayerState(ulong clientId, string name, int playerNumber, SeatState state, int seatIdx = -1, float lastChangeTime = 0)
+            public LobbyPlayerState(ulong clientId, string name, int playerNumber, SeatState state, SeatType seatType = SeatType.NONE, float lastChangeTime = 0)
             {
                 ClientId = clientId;
                 PlayerNumber = playerNumber;
                 SeatState = state;
-                SeatIdx = seatIdx;
+                SeatType = seatType;
                 LastChangeTime = lastChangeTime;
                 m_PlayerName = new FixedPlayerName();
 
@@ -53,7 +59,7 @@ namespace Gameplay.GameState
                 serializer.SerializeValue(ref m_PlayerName);
                 serializer.SerializeValue(ref PlayerNumber);
                 serializer.SerializeValue(ref SeatState);
-                serializer.SerializeValue(ref SeatIdx);
+                serializer.SerializeValue(ref SeatType);
                 serializer.SerializeValue(ref LastChangeTime);
             }
 
@@ -62,7 +68,7 @@ namespace Gameplay.GameState
                 return ClientId == other.ClientId &&
                        m_PlayerName.Equals(other.m_PlayerName) &&
                        PlayerNumber == other.PlayerNumber &&
-                       SeatIdx == other.SeatIdx &&
+                       SeatType == other.SeatType &&
                        LastChangeTime.Equals(other.LastChangeTime) &&
                        SeatState == other.SeatState;
             }
@@ -88,15 +94,15 @@ namespace Gameplay.GameState
         /// <summary>
         /// Server notification when a client requests a different lobby-seat, or locks in their seat choice
         /// </summary>
-        public event Action<ulong, int, bool> OnClientChangedSeat;
+        public event Action<ulong, SeatType, bool> OnClientChangedSeat;
 
         /// <summary>
         /// RPC to notify the server that a client has chosen a seat.
         /// </summary>
         [ServerRpc(RequireOwnership = false)]
-        public void ChangeSeatServerRpc(ulong clientId, int seatIdx, bool lockedIn)
+        public void ChangeSeatServerRpc(ulong clientId, SeatType seatType, bool lockedIn)
         {
-            OnClientChangedSeat?.Invoke(clientId, seatIdx, lockedIn);
+            OnClientChangedSeat?.Invoke(clientId, seatType, lockedIn);
         }
     }
 }
