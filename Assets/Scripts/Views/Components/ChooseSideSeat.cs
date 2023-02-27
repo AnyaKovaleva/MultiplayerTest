@@ -21,6 +21,8 @@ namespace Views.Components
         private bool _isDisabled;
 
         private NetworkChooseSide.SeatType _seatType;
+
+        public NetworkChooseSide.SeatType SeatType => _seatType;
         
         public ChooseSideSeat(VisualElement rootVE, NetworkChooseSide.SeatType seatType)
         {
@@ -39,7 +41,7 @@ namespace Views.Components
 
             _state = state;
             _playerNumber = playerIndex;
-            _playerNumberLabel.text = _playerNumber.ToString();
+            _playerNumberLabel.text = "P" + _playerNumber;
             _playerNameLabel.text = playerName;
             if (_state == NetworkChooseSide.SeatState.Inactive)
                 _playerNumber = -1;

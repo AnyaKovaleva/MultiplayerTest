@@ -134,6 +134,12 @@ namespace Gameplay.GameState
                     return; // nope, at least one player isn't locked in yet!
             }
 
+            if (_networkChooseSide.LobbyPlayers.Count != _connectionManager.MaxConnectedPlayers)
+            {
+                //not everyone connected
+                return;
+            }
+
             // everybody's ready at the same time! Lock it down!
             _networkChooseSide.IsLobbyClosed.Value = true;
 

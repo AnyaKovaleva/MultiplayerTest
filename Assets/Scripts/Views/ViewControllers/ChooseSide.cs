@@ -50,6 +50,37 @@ namespace Views.ViewControllers
         public void UpdateLobbyState(ClientChooseSideState.LobbyMode newLobbyMode)
         {
             _view.LobbyStateLabel.text = $"Curren lobby mode is:\n <b>{newLobbyMode}";
+            // that finishes the easy bit. Next, each lobby mode might also need to configure the lobby seats and class-info box.
+            bool isSeatsDisabledInThisMode = false;
+            switch (newLobbyMode)
+            {
+                case ClientChooseSideState.LobbyMode.ChooseSeat:
+                    _view.ReadyButton.text = "READY!";
+                    SetMessageText("Choose your side!");
+                    break;
+                case ClientChooseSideState.LobbyMode.SeatChosen:
+                    isSeatsDisabledInThisMode = true;
+                    SetMessageText("Waiting for other players");
+                   // m_ClassInfoBox.SetLockedIn(true);
+                    _view.ReadyButton.text = "UNREADY";
+                    break;
+                case ClientChooseSideState.LobbyMode.FatalError:
+                    isSeatsDisabledInThisMode = true;
+                    //m_ClassInfoBox.ConfigureForNoSelection();
+                    break;
+                case ClientChooseSideState.LobbyMode.LobbyEnding:
+                    isSeatsDisabledInThisMode = true;
+                    SetMessageText("Starting the game!");
+                    //m_ClassInfoBox.ConfigureForNoSelection();
+                    break;
+            }
+
+            // go through all our seats and enable or disable buttons
+            foreach (var seat in _seats)
+            {
+                // disable interaction if seat is already locked or all seats disabled
+                seat.SetDisableInteractions(seat.IsLocked() || isSeatsDisabledInThisMode);
+            }
         }
         protected override void InitButtonEvents()
         {

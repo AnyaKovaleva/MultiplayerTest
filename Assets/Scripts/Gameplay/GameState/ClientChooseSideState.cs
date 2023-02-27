@@ -28,7 +28,7 @@ namespace Gameplay.GameState
 
         [Inject] private ConnectionManager _connectionManager;
         
-        private ChooseSide _chooseSideUI => ChooseSideUIInitializer.Instance.ChooseSide;
+        private ChooseSide _chooseSideUI => ChooseSideUIInitializer.Instance != null ? ChooseSideUIInitializer.Instance.ChooseSide : null;
         
         
         NetworkChooseSide.SeatType _lastSeatSelected = NetworkChooseSide.SeatType.NONE;
@@ -66,6 +66,7 @@ namespace Gameplay.GameState
             //     m_PlayerSeats[i].Initialize(i);
             // }
             //
+            UpdatePlayerCount();
             ConfigureUIForLobbyMode(LobbyMode.ChooseSeat);
             UpdateCharacterSelection(NetworkChooseSide.SeatState.Inactive);
         }
@@ -146,7 +147,7 @@ namespace Gameplay.GameState
             else
             {
                 // we have a seat! Note that if our seat is LockedIn, this function will also switch the lobby mode
-                UpdateCharacterSelection(_networkSideSelection.LobbyPlayers[localPlayerIdx].SeatState, _networkSideSelection.LobbyPlayers[localPlayerIdx].SeatIdx);
+                UpdateCharacterSelection(_networkSideSelection.LobbyPlayers[localPlayerIdx].SeatState, _networkSideSelection.LobbyPlayers[localPlayerIdx].SeatType);
             }
         }
         
@@ -163,37 +164,6 @@ namespace Gameplay.GameState
          public void ConfigureUIForLobbyMode(ClientChooseSideState.LobbyMode mode)
         {
             _chooseSideUI.UpdateLobbyState(mode);
-            // that finishes the easy bit. Next, each lobby mode might also need to configure the lobby seats and class-info box.
-            bool isSeatsDisabledInThisMode = false;
-            switch (mode)
-            {
-                case ClientChooseSideState.LobbyMode.ChooseSeat:
-                    if (_lastSeatSelected == -1)
-                    {
-                        // if (m_CurrentCharacterGraphics)
-                        // {
-                        //     m_CurrentCharacterGraphics.gameObject.SetActive(false);
-                        // }
-                        // m_ClassInfoBox.ConfigureForNoSelection();
-                    }
-                    _chooseSideUI.SetMessageText( "ChooseSeat\nREADY!");
-                    break;
-                case ClientChooseSideState.LobbyMode.SeatChosen:
-                    isSeatsDisabledInThisMode = true;
-                    //m_ClassInfoBox.SetLockedIn(true);
-                    _chooseSideUI.SetMessageText( "SeatChosen\nUNREADY");
-                    break;
-                case ClientChooseSideState.LobbyMode.FatalError:
-                    isSeatsDisabledInThisMode = true;
-                    //m_ClassInfoBox.ConfigureForNoSelection();
-                    _chooseSideUI.SetMessageText( "FatalError");
-                    break;
-                case ClientChooseSideState.LobbyMode.LobbyEnding:
-                    isSeatsDisabledInThisMode = true;
-                    //m_ClassInfoBox.ConfigureForNoSelection();
-                    _chooseSideUI.SetMessageText( "LobbyEnding");
-                    break;
-            }
         }
         
          /// <summary>
@@ -203,11 +173,11 @@ namespace Gameplay.GameState
         /// </summary>
         /// <param name="state">Our current seat state</param>
         /// <param name="seatIdx">Which seat we're sitting in, or -1 if SeatState is Inactive</param>
-        public void UpdateCharacterSelection(NetworkChooseSide.SeatState state, int seatIdx = -1)
+        public void UpdateCharacterSelection(NetworkChooseSide.SeatState state, NetworkChooseSide.SeatType seatType = NetworkChooseSide.SeatType.NONE)
         {
-            bool isNewSeat = _lastSeatSelected != seatIdx;
+            bool isNewSeat = _lastSeatSelected != seatType;
 
-            _lastSeatSelected = seatIdx;
+            _lastSeatSelected = seatType;
             if (state == NetworkChooseSide.SeatState.Inactive)
             {
                 Debug.Log("NetworkChooseSide.SeatState.Inactive");
@@ -220,7 +190,7 @@ namespace Gameplay.GameState
             }
             else
             {
-                if (seatIdx != -1)
+                if (seatType != NetworkChooseSide.SeatType.NONE)
                 {
                     // change character preview when selecting a new seat
                     if (isNewSeat)
@@ -280,7 +250,7 @@ namespace Gameplay.GameState
              }
              else
              {
-                 if (_lastSeatSelected == -1)
+                 if (_lastSeatSelected == NetworkChooseSide.SeatType.NONE)
                  {
                      ConfigureUIForLobbyMode(LobbyMode.ChooseSeat);
                      Debug.Log("Choosing seat ");
@@ -303,19 +273,25 @@ namespace Gameplay.GameState
              // Once they have chosen their class (by "locking in" their seat), other players in that seat are kicked out.
              // But until a seat is locked in, we need to display each seat as being used by the latest player to choose it.
              // So we go through all players and figure out who should visually be shown as sitting in that seat.
-             
-             //TODO:  change magic number
-             NetworkChooseSide.LobbyPlayerState[] curSeats = new NetworkChooseSide.LobbyPlayerState[2];
+             if (_chooseSideUI == null)
+             {
+                 Debug.Log("choose side ui is still null");
+                 return;
+             }
+             NetworkChooseSide.LobbyPlayerState[] curSeats = new NetworkChooseSide.LobbyPlayerState[_chooseSideUI._seats.Count];
              foreach (NetworkChooseSide.LobbyPlayerState playerState in _networkSideSelection.LobbyPlayers)
              {
-                 if (playerState.SeatIdx == -1 || playerState.SeatState == NetworkChooseSide.SeatState.Inactive)
+                 if (playerState.SeatType == NetworkChooseSide.SeatType.NONE || playerState.SeatState == NetworkChooseSide.SeatState.Inactive)
                      continue; // this player isn't seated at all!
-                 if (curSeats[playerState.SeatIdx].SeatState == NetworkChooseSide.SeatState.Inactive
-                     || (curSeats[playerState.SeatIdx].SeatState == NetworkChooseSide.SeatState.Active && curSeats[playerState.SeatIdx].LastChangeTime < playerState.LastChangeTime))
+                 
+                 int seatIndex  = _chooseSideUI._seats.FindIndex(x=>x.SeatType == playerState.SeatType);
+                 
+                 if (curSeats[seatIndex].SeatState == NetworkChooseSide.SeatState.Inactive
+                     || (curSeats[seatIndex].SeatState == NetworkChooseSide.SeatState.Active && curSeats[seatIndex].LastChangeTime < playerState.LastChangeTime))
                  {
                      // this is the best candidate to be displayed in this seat (so far)
-                     Debug.Log("curr seat index " + playerState.SeatIdx + " new seat state "+ playerState.SeatState);
-                     curSeats[playerState.SeatIdx] = playerState;
+                     Debug.Log("curr seat index " + seatIndex + " new seat state "+ playerState.SeatState);
+                     curSeats[seatIndex] = playerState;
                  }
              }
 
@@ -324,23 +300,25 @@ namespace Gameplay.GameState
              //TODO:  change magic number
              for (int i = 0; i < 2; ++i)
              {
-                 // m_PlayerSeats[i].SetState(curSeats[i].SeatState, curSeats[i].PlayerNumber, curSeats[i].PlayerName);
+                 _chooseSideUI._seats[i].SetState(curSeats[i].SeatState, curSeats[i].PlayerNumber, curSeats[i].PlayerName);
                  message +=
                      $"current seat state {curSeats[i].SeatState}, Player number = {curSeats[i].PlayerNumber}, player name - {curSeats[i].PlayerName}\n";
              }
+
+             Debug.Log(message);
          }
          
          /// <summary>
          /// Called directly by UI elements!
          /// </summary>
          /// <param name="seatIdx"></param>
-         public void OnPlayerClickedSeat(int seatIdx)
-         {
-             if (_networkSideSelection.IsSpawned)
-             {
-                 _networkSideSelection.ChangeSeatServerRpc(NetworkManager.Singleton.LocalClientId, seatIdx, false);
-             }
-         } 
+         // public void OnPlayerClickedSeat(int seatIdx)
+         // {
+         //     if (_networkSideSelection.IsSpawned)
+         //     {
+         //         _networkSideSelection.ChangeSeatServerRpc(NetworkManager.Singleton.LocalClientId, seatIdx, false);
+         //     }
+         // } 
          
          public void OnPlayerClickedSeat(NetworkChooseSide.SeatType seatType)
          {
