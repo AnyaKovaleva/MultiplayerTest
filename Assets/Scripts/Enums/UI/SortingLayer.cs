@@ -5,6 +5,7 @@
         MAIN_MENU,
         CHOOSE_SIDE,
         PROFILE_PANEL,
+        HUD,
         POPUPS
     }
 }

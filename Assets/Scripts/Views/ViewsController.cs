@@ -92,10 +92,13 @@ namespace Views
             {
                 if (view.GetType() == viewType)
                 {
-                    _currentlyOpened?.Close();
+                    if (view.Type != ViewType.POPUP)
+                    {
+                        _currentlyOpened?.Close();
+                    }
 
                     view.Open();
-
+                    
                     AddToHistory(view);
 
                     // if (_currentlyOpened != null)
