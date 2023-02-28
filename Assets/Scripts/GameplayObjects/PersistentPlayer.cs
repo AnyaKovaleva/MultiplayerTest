@@ -1,4 +1,6 @@
 using ConnectionManagement;
+using Enums;
+using Gameplay.GameState;
 using Unity.BossRoom.Gameplay.GameplayObjects;
 using Unity.Netcode;
 using UnityEngine;
@@ -26,6 +28,8 @@ namespace GameplayObjects
         
         public NetworkNameState NetworkNameState => m_NetworkNameState;
         
+        public GameMarkType MarkType { get; private set; }
+        
         public override void OnNetworkSpawn()
         {
             gameObject.name = "PersistentPlayer" + OwnerClientId;
@@ -34,22 +38,21 @@ namespace GameplayObjects
             // when this element is added to the runtime collection. If this was done in OnEnable() there is a chance
             // that OwnerClientID could be its default value (0).
             m_PersistentPlayerRuntimeCollection.Add(this);
-            if (IsServer)
+            var sessionPlayerData = SessionManager<SessionPlayerData>.Instance.GetPlayerData(OwnerClientId);
+            if (sessionPlayerData.HasValue)
             {
-                var sessionPlayerData = SessionManager<SessionPlayerData>.Instance.GetPlayerData(OwnerClientId);
-                if (sessionPlayerData.HasValue)
+                var playerData = sessionPlayerData.Value;
+                m_NetworkNameState.Name.Value = playerData.PlayerName;
+                MarkType = playerData.MarkType;
+                if (playerData.HasCharacterSpawned)
                 {
-                    var playerData = sessionPlayerData.Value;
-                    m_NetworkNameState.Name.Value = playerData.PlayerName;
-                    if (!playerData.HasCharacterSpawned)
-                    {
-                        SessionManager<SessionPlayerData>.Instance.SetPlayerData(OwnerClientId, playerData);
-
-                     //   m_NetworkAvatarGuidState.AvatarGuid.Value = playerData.AvatarNetworkGuid;
-                    }
-                    // else
-                    // {
-                    // }
+                  //  m_NetworkAvatarGuidState.AvatarGuid.Value = playerData.AvatarNetworkGuid;
+                }
+                else
+                {
+                    // m_NetworkAvatarGuidState.SetRandomAvatar();
+                    // playerData.AvatarNetworkGuid = m_NetworkAvatarGuidState.AvatarGuid.Value;
+                    SessionManager<SessionPlayerData>.Instance.SetPlayerData(OwnerClientId, playerData);
                 }
             }
         }
@@ -65,6 +68,10 @@ namespace GameplayObjects
             RemovePersistentPlayer();
         }
 
+        public void SetSeatType(GameMarkType MarkType)
+        {
+            this.MarkType = MarkType;
+        }
         void RemovePersistentPlayer()
         {
             m_PersistentPlayerRuntimeCollection.Remove(this);
@@ -75,6 +82,7 @@ namespace GameplayObjects
                 {
                     var playerData = sessionPlayerData.Value;
                     playerData.PlayerName = m_NetworkNameState.Name.Value;
+                    playerData.MarkType = MarkType;
                   //  playerData.AvatarNetworkGuid = m_NetworkAvatarGuidState.AvatarGuid.Value;
                     SessionManager<SessionPlayerData>.Instance.SetPlayerData(OwnerClientId, playerData);
                 }

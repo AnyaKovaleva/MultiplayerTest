@@ -1,10 +1,11 @@
 namespace Gameplay.GameState
 {
-    public enum WinState
+    public enum GameResultState
     {
         Invalid,
-        Win,
-        Loss
+        X_Won,
+        O_Won,
+        Draw
     }
 
     /// <summary>
@@ -12,16 +13,16 @@ namespace Gameplay.GameState
     /// </summary>
     public class PersistentGameState
     {
-        public WinState WinState { get; private set; }
+        public GameResultState GameResultState { get; private set; }
 
-        public void SetWinState(WinState winState)
+        public void SetGameResult(GameResultState gameResultState)
         {
-            WinState = winState;
+            GameResultState = gameResultState;
         }
 
         public void Reset()
         {
-            WinState = WinState.Invalid;
+            GameResultState = GameResultState.Invalid;
         }
     }
 }

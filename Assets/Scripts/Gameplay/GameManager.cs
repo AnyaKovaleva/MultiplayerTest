@@ -35,7 +35,7 @@ namespace Gameplay
         
         private void Start()
         {
-            UIManager.Instance.Open(typeof(MainMenuUI));
+        //    UIManager.Instance.Open(typeof(MainMenuUI));
         }
         
         public void StartGame()
