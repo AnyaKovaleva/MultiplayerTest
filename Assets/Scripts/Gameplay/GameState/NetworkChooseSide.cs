@@ -1,4 +1,5 @@
 ﻿using System;
+using Enums;
 using Unity.Netcode;
 using Utils;
 
@@ -11,15 +12,9 @@ namespace Gameplay.GameState
             Inactive,
             Active,
             LockedIn,
-        } 
-         public enum SeatType : byte
-        {
-            NONE,
-            X,
-            O
         }
-        
-        /// <summary>
+
+         /// <summary>
         /// Describes one of the players in the lobby, and their current character-select status.
         /// </summary>
         public struct LobbyPlayerState : INetworkSerializable, IEquatable<LobbyPlayerState>
@@ -29,18 +24,18 @@ namespace Gameplay.GameState
             private FixedPlayerName m_PlayerName; // I'm sad there's no 256Bytes fixed list :(
 
             public int PlayerNumber; // this player's assigned "P#". (0=P1, 1=P2, etc.)
-            public SeatType SeatType; // the latest seat they were in. -1 means none
+            public GameMarkType MarkType; // the latest seat they were in. -1 means none
             public float LastChangeTime;
 
             public SeatState SeatState;
 
 
-            public LobbyPlayerState(ulong clientId, string name, int playerNumber, SeatState state, SeatType seatType = SeatType.NONE, float lastChangeTime = 0)
+            public LobbyPlayerState(ulong clientId, string name, int playerNumber, SeatState state, GameMarkType markType = GameMarkType.NONE, float lastChangeTime = 0)
             {
                 ClientId = clientId;
                 PlayerNumber = playerNumber;
                 SeatState = state;
-                SeatType = seatType;
+                MarkType = markType;
                 LastChangeTime = lastChangeTime;
                 m_PlayerName = new FixedPlayerName();
 
@@ -59,7 +54,7 @@ namespace Gameplay.GameState
                 serializer.SerializeValue(ref m_PlayerName);
                 serializer.SerializeValue(ref PlayerNumber);
                 serializer.SerializeValue(ref SeatState);
-                serializer.SerializeValue(ref SeatType);
+                serializer.SerializeValue(ref MarkType);
                 serializer.SerializeValue(ref LastChangeTime);
             }
 
@@ -68,7 +63,7 @@ namespace Gameplay.GameState
                 return ClientId == other.ClientId &&
                        m_PlayerName.Equals(other.m_PlayerName) &&
                        PlayerNumber == other.PlayerNumber &&
-                       SeatType == other.SeatType &&
+                       MarkType == other.MarkType &&
                        LastChangeTime.Equals(other.LastChangeTime) &&
                        SeatState == other.SeatState;
             }
@@ -94,15 +89,15 @@ namespace Gameplay.GameState
         /// <summary>
         /// Server notification when a client requests a different lobby-seat, or locks in their seat choice
         /// </summary>
-        public event Action<ulong, SeatType, bool> OnClientChangedSeat;
+        public event Action<ulong, GameMarkType, bool> OnClientChangedSeat;
 
         /// <summary>
         /// RPC to notify the server that a client has chosen a seat.
         /// </summary>
         [ServerRpc(RequireOwnership = false)]
-        public void ChangeSeatServerRpc(ulong clientId, SeatType seatType, bool lockedIn)
+        public void ChangeSeatServerRpc(ulong clientId, GameMarkType markType, bool lockedIn)
         {
-            OnClientChangedSeat?.Invoke(clientId, seatType, lockedIn);
+            OnClientChangedSeat?.Invoke(clientId, markType, lockedIn);
         }
     }
 }

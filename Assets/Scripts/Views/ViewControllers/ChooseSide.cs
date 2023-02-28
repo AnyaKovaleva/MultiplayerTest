@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ConnectionManagement;
+using Enums;
 using Gameplay.GameState;
 using Interfaces.UI;
 using Unity.Multiplayer.Samples.Utilities;
@@ -38,8 +39,8 @@ namespace Views.ViewControllers
 
             _view.JoinCodeLabel.text = _localLobby.LobbyCode;
             
-            _seats.Add(new ChooseSideSeat(_view.XButton, NetworkChooseSide.SeatType.X));
-            _seats.Add(new ChooseSideSeat(_view.OButton, NetworkChooseSide.SeatType.O));
+            _seats.Add(new ChooseSideSeat(_view.XButton, GameMarkType.X));
+            _seats.Add(new ChooseSideSeat(_view.OButton, GameMarkType.O));
         }
 
         public void SetMessageText(string text)

@@ -1,4 +1,5 @@
-﻿using Extensions;
+﻿using Enums;
+using Extensions;
 using Gameplay.GameState;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -20,18 +21,18 @@ namespace Views.Components
         // once this is true, we're never clickable again!
         private bool _isDisabled;
 
-        private NetworkChooseSide.SeatType _seatType;
+        private GameMarkType _markType;
 
-        public NetworkChooseSide.SeatType SeatType => _seatType;
+        public GameMarkType MarkType => _markType;
         
-        public ChooseSideSeat(VisualElement rootVE, NetworkChooseSide.SeatType seatType)
+        public ChooseSideSeat(VisualElement rootVE, GameMarkType markType)
         {
-            _seatType = seatType;
+            _markType = markType;
             _state = NetworkChooseSide.SeatState.Inactive;
             _playerNumber = -1;
             MapFieldsToUI(rootVE);
 
-            _chooseSideButton.clicked += () => ClientChooseSideState.Instance.OnPlayerClickedSeat(_seatType);
+            _chooseSideButton.clicked += () => ClientChooseSideState.Instance.OnPlayerClickedSeat(_markType);
         }
 
         public void SetState(NetworkChooseSide.SeatState state, int playerIndex, string playerName)

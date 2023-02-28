@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ConnectionManagement;
+using Enums;
 using Initializers;
 using Unity.Netcode;
 using UnityEngine;
@@ -31,7 +32,7 @@ namespace Gameplay.GameState
         private ChooseSide _chooseSideUI => ChooseSideUIInitializer.Instance != null ? ChooseSideUIInitializer.Instance.ChooseSide : null;
         
         
-        NetworkChooseSide.SeatType _lastSeatSelected = NetworkChooseSide.SeatType.NONE;
+        GameMarkType _lastSeatSelected = GameMarkType.NONE;
         bool _hasLocalPlayerLockedIn = false;
         
         /// <summary>
@@ -147,7 +148,7 @@ namespace Gameplay.GameState
             else
             {
                 // we have a seat! Note that if our seat is LockedIn, this function will also switch the lobby mode
-                UpdateCharacterSelection(_networkSideSelection.LobbyPlayers[localPlayerIdx].SeatState, _networkSideSelection.LobbyPlayers[localPlayerIdx].SeatType);
+                UpdateCharacterSelection(_networkSideSelection.LobbyPlayers[localPlayerIdx].SeatState, _networkSideSelection.LobbyPlayers[localPlayerIdx].MarkType);
             }
         }
         
@@ -173,11 +174,11 @@ namespace Gameplay.GameState
         /// </summary>
         /// <param name="state">Our current seat state</param>
         /// <param name="seatIdx">Which seat we're sitting in, or -1 if SeatState is Inactive</param>
-        public void UpdateCharacterSelection(NetworkChooseSide.SeatState state, NetworkChooseSide.SeatType seatType = NetworkChooseSide.SeatType.NONE)
+        public void UpdateCharacterSelection(NetworkChooseSide.SeatState state, GameMarkType markType = GameMarkType.NONE)
         {
-            bool isNewSeat = _lastSeatSelected != seatType;
+            bool isNewSeat = _lastSeatSelected != markType;
 
-            _lastSeatSelected = seatType;
+            _lastSeatSelected = markType;
             if (state == NetworkChooseSide.SeatState.Inactive)
             {
                 Debug.Log("NetworkChooseSide.SeatState.Inactive");
@@ -190,7 +191,7 @@ namespace Gameplay.GameState
             }
             else
             {
-                if (seatType != NetworkChooseSide.SeatType.NONE)
+                if (markType != GameMarkType.NONE)
                 {
                     // change character preview when selecting a new seat
                     if (isNewSeat)
@@ -250,7 +251,7 @@ namespace Gameplay.GameState
              }
              else
              {
-                 if (_lastSeatSelected == NetworkChooseSide.SeatType.NONE)
+                 if (_lastSeatSelected == GameMarkType.NONE)
                  {
                      ConfigureUIForLobbyMode(LobbyMode.ChooseSeat);
                      Debug.Log("Choosing seat ");
@@ -281,10 +282,10 @@ namespace Gameplay.GameState
              NetworkChooseSide.LobbyPlayerState[] curSeats = new NetworkChooseSide.LobbyPlayerState[_chooseSideUI._seats.Count];
              foreach (NetworkChooseSide.LobbyPlayerState playerState in _networkSideSelection.LobbyPlayers)
              {
-                 if (playerState.SeatType == NetworkChooseSide.SeatType.NONE || playerState.SeatState == NetworkChooseSide.SeatState.Inactive)
+                 if (playerState.MarkType == GameMarkType.NONE || playerState.SeatState == NetworkChooseSide.SeatState.Inactive)
                      continue; // this player isn't seated at all!
                  
-                 int seatIndex  = _chooseSideUI._seats.FindIndex(x=>x.SeatType == playerState.SeatType);
+                 int seatIndex  = _chooseSideUI._seats.FindIndex(x=>x.MarkType == playerState.MarkType);
                  
                  if (curSeats[seatIndex].SeatState == NetworkChooseSide.SeatState.Inactive
                      || (curSeats[seatIndex].SeatState == NetworkChooseSide.SeatState.Active && curSeats[seatIndex].LastChangeTime < playerState.LastChangeTime))
@@ -320,11 +321,11 @@ namespace Gameplay.GameState
          //     }
          // } 
          
-         public void OnPlayerClickedSeat(NetworkChooseSide.SeatType seatType)
+         public void OnPlayerClickedSeat(GameMarkType markType)
          {
              if (_networkSideSelection.IsSpawned)
              {
-                 _networkSideSelection.ChangeSeatServerRpc(NetworkManager.Singleton.LocalClientId, seatType, false);
+                 _networkSideSelection.ChangeSeatServerRpc(NetworkManager.Singleton.LocalClientId, markType, false);
              }
          }
          

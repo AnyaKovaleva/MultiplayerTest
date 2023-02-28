@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using ConnectionManagement;
+using Enums;
+using GameplayObjects;
 using Unity.Multiplayer.Samples.Utilities;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,7 +12,6 @@ using VContainer;
 namespace Gameplay.GameState
 {
     [RequireComponent(typeof(NetcodeHooks), typeof(NetworkChooseSide))]
-
     public class ServerChooseSideState : GameStateBehaviour
     {
         public override GameState ActiveState => GameState.ChooseSide;
@@ -19,7 +20,7 @@ namespace Gameplay.GameState
         [SerializeField] private NetworkChooseSide _networkChooseSide;
 
         [Inject] private ConnectionManager _connectionManager;
-        
+
         Coroutine _waitToEndLobbyCoroutine;
 
         protected override void Awake()
@@ -42,12 +43,13 @@ namespace Gameplay.GameState
             }
         }
 
-        void OnClientChangedSeat(ulong clientId, NetworkChooseSide.SeatType newSeatType, bool lockedIn)
+        void OnClientChangedSeat(ulong clientId, GameMarkType newMarkType, bool lockedIn)
         {
             int idx = FindLobbyPlayerIdx(clientId);
             if (idx == -1)
             {
-                throw new Exception($"OnClientChangedSeat: client ID {clientId} is not a lobby player and cannot change seats! Shouldn't be here!");
+                throw new Exception(
+                    $"OnClientChangedSeat: client ID {clientId} is not a lobby player and cannot change seats! Shouldn't be here!");
             }
 
             if (_networkChooseSide.IsLobbyClosed.Value)
@@ -56,7 +58,7 @@ namespace Gameplay.GameState
                 return;
             }
 
-            if (newSeatType == NetworkChooseSide.SeatType.NONE)
+            if (newMarkType == GameMarkType.NONE)
             {
                 // we can't lock in with no seat
                 lockedIn = false;
@@ -66,7 +68,8 @@ namespace Gameplay.GameState
                 // see if someone has already locked-in that seat! If so, too late... discard this choice
                 foreach (NetworkChooseSide.LobbyPlayerState playerInfo in _networkChooseSide.LobbyPlayers)
                 {
-                    if (playerInfo.ClientId != clientId && playerInfo.SeatType == newSeatType && playerInfo.SeatState == NetworkChooseSide.SeatState.LockedIn)
+                    if (playerInfo.ClientId != clientId && playerInfo.MarkType == newMarkType &&
+                        playerInfo.SeatState == NetworkChooseSide.SeatState.LockedIn)
                     {
                         // somebody already locked this choice in. Stop!
                         // Instead of granting lock request, change this player to Inactive state.
@@ -85,7 +88,7 @@ namespace Gameplay.GameState
                 _networkChooseSide.LobbyPlayers[idx].PlayerName,
                 _networkChooseSide.LobbyPlayers[idx].PlayerNumber,
                 lockedIn ? NetworkChooseSide.SeatState.LockedIn : NetworkChooseSide.SeatState.Active,
-                newSeatType,
+                newMarkType,
                 Time.time);
 
             if (lockedIn)
@@ -94,7 +97,7 @@ namespace Gameplay.GameState
                 // who were also in that seat. (Those players didn't click "Ready!" fast enough, somebody else took their seat!)
                 for (int i = 0; i < _networkChooseSide.LobbyPlayers.Count; ++i)
                 {
-                    if (_networkChooseSide.LobbyPlayers[i].SeatType == newSeatType && i != idx)
+                    if (_networkChooseSide.LobbyPlayers[i].MarkType == newMarkType && i != idx)
                     {
                         // change this player to Inactive state.
                         _networkChooseSide.LobbyPlayers[i] = new NetworkChooseSide.LobbyPlayerState(
@@ -119,6 +122,7 @@ namespace Gameplay.GameState
                 if (_networkChooseSide.LobbyPlayers[i].ClientId == clientId)
                     return i;
             }
+
             return -1;
         }
 
@@ -144,7 +148,7 @@ namespace Gameplay.GameState
             _networkChooseSide.IsLobbyClosed.Value = true;
 
             Debug.Log("Everyone is locked in!!!");
-            
+
             // remember our choices so the next scene can use the info
             SaveLobbyResults();
 
@@ -161,6 +165,7 @@ namespace Gameplay.GameState
             {
                 StopCoroutine(_waitToEndLobbyCoroutine);
             }
+
             _networkChooseSide.IsLobbyClosed.Value = false;
         }
 
@@ -168,18 +173,26 @@ namespace Gameplay.GameState
         {
             foreach (NetworkChooseSide.LobbyPlayerState playerInfo in _networkChooseSide.LobbyPlayers)
             {
-                var playerNetworkObject = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(playerInfo.ClientId);
+                var playerNetworkObject =
+                    NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(playerInfo.ClientId);
 
-               // if (playerNetworkObject && playerNetworkObject.TryGetComponent(out PersistentPlayer persistentPlayer))
-               // {
-                    // pass avatar GUID to PersistentPlayer
-                    // it'd be great to simplify this with something like a NetworkScriptableObjects :(
+                var sessionPlayer = SessionManager<SessionPlayerData>.Instance.GetPlayerData(playerInfo.ClientId);
+                var playerData = sessionPlayer.Value;
+
+                playerData.UpdateSeatType(playerInfo.MarkType);
+                SessionManager<SessionPlayerData>.Instance.SetPlayerData(playerInfo.ClientId, playerData);
+
+                if (playerNetworkObject && playerNetworkObject.TryGetComponent(out PersistentPlayer persistentPlayer))
+                {
+                    //  pass avatar GUID to PersistentPlayer
+                    //  it'd be great to simplify this with something like a NetworkScriptableObjects :(
 
                     Debug.Log("Do smth with player prefab. ClientID is " + playerInfo.ClientId);
 
+                    persistentPlayer.SetSeatType(playerInfo.MarkType);
                     // persistentPlayer.NetworkAvatarGuidState.AvatarGuid.Value =
                     //     _networkChooseSide.AvatarConfiguration[playerInfo.SeatIdx].Guid.ToNetworkGuid();
-                    //}
+                }
             }
         }
 
@@ -196,6 +209,7 @@ namespace Gameplay.GameState
                 NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnectCallback;
                 NetworkManager.Singleton.SceneManager.OnSceneEvent -= OnSceneEvent;
             }
+
             if (_networkChooseSide)
             {
                 _networkChooseSide.OnClientChangedSeat -= OnClientChangedSeat;
@@ -219,23 +233,26 @@ namespace Gameplay.GameState
 
         void OnSceneEvent(SceneEvent sceneEvent)
         {
-            Debug.Log("Scene event happened "+ sceneEvent.SceneName);
+            Debug.Log("Scene event happened " + sceneEvent.SceneName);
             // We need to filter out the event that are not a client has finished loading the scene
             if (sceneEvent.SceneEventType != SceneEventType.LoadComplete) return;
             // When the client finishes loading the Lobby Map, we will need to Seat it
-            Debug.Log("need to seat new player with ID "  +sceneEvent.ClientId);
+            Debug.Log("need to seat new player with ID " + sceneEvent.ClientId);
             SeatNewPlayer(sceneEvent.ClientId);
         }
 
         int GetAvailablePlayerNumber()
         {
-            for (int possiblePlayerNumber = 0; possiblePlayerNumber < _connectionManager.MaxConnectedPlayers; ++possiblePlayerNumber)
+            for (int possiblePlayerNumber = 0;
+                 possiblePlayerNumber < _connectionManager.MaxConnectedPlayers;
+                 ++possiblePlayerNumber)
             {
                 if (IsPlayerNumberAvailable(possiblePlayerNumber))
                 {
                     return possiblePlayerNumber;
                 }
             }
+
             // we couldn't get a Player# for this person... which means the lobby is full!
             return -1;
         }
@@ -272,13 +289,16 @@ namespace Gameplay.GameState
                     // If no player num already assigned or if player num is no longer available, get an available one.
                     playerData.PlayerNumber = GetAvailablePlayerNumber();
                 }
+
                 if (playerData.PlayerNumber == -1)
                 {
                     // Sanity check. We ran out of seats... there was no room!
-                    throw new Exception($"we shouldn't be here, connection approval should have refused this connection already for client ID {clientId} and player num {playerData.PlayerNumber}");
+                    throw new Exception(
+                        $"we shouldn't be here, connection approval should have refused this connection already for client ID {clientId} and player num {playerData.PlayerNumber}");
                 }
 
-                _networkChooseSide.LobbyPlayers.Add(new NetworkChooseSide.LobbyPlayerState(clientId, playerData.PlayerName, playerData.PlayerNumber, NetworkChooseSide.SeatState.Inactive));
+                _networkChooseSide.LobbyPlayers.Add(new NetworkChooseSide.LobbyPlayerState(clientId,
+                    playerData.PlayerName, playerData.PlayerNumber, NetworkChooseSide.SeatState.Inactive));
                 SessionManager<SessionPlayerData>.Instance.SetPlayerData(clientId, playerData);
             }
         }
