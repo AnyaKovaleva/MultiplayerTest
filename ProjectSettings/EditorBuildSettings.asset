@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TicTacToe.unity
     guid: e4b3f4de44d9d7340afaecf1a6fcb4c6
+  - enabled: 1
+    path: Assets/Scenes/PostGame.unity
+    guid: 677208a81cad1c74b9ef31849188d894
   m_configObjects: {}

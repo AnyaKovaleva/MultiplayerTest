@@ -1,5 +1,6 @@
 ﻿using System;
 using ConnectionManagement;
+using Enums;
 using Gameplay.Structs;
 using Initializers;
 using Unity.Netcode;
@@ -18,7 +19,7 @@ namespace Gameplay.GameState
         [SerializeField] private GameField _gameField;
 
         public static ClientTicTacToeState Instance;
-        
+
         public override GameState ActiveState
         {
             get { return GameState.TicTacToe; }
@@ -43,15 +44,19 @@ namespace Gameplay.GameState
             _netcodeHooks.OnNetworkDespawnHook += OnNetworkDespawn;
         }
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            if (_netcodeHooks)
+            {
+                _netcodeHooks.OnNetworkSpawnHook -= OnNetworkSpawn;
+                _netcodeHooks.OnNetworkDespawnHook -= OnNetworkDespawn;
+            }
+        }
+
         protected override void Start()
         {
             base.Start();
-            var playerData = SessionManager<SessionPlayerData>.Instance.GetPlayerData(NetworkManager.Singleton.LocalClientId);
-            if (playerData.HasValue)
-            {
-                GameHudUI.PlayerSideText = $"Your side is: {playerData.Value.MarkType}";
-            }
-
             _isOurTurn = _networkTicTacToe.CurrentPlayerTurn.Value == NetworkManager.Singleton.LocalClientId;
             UpdateUI();
         }
@@ -61,7 +66,7 @@ namespace Gameplay.GameState
             if (_networkTicTacToe)
             {
                 _networkTicTacToe.CurrentPlayerTurn.OnValueChanged -= OnPlayerTurnChanged;
-                _networkTicTacToe.OnServerUpdateGridValue -= _gameField.SetGridEntityValue;
+                _networkTicTacToe.OnServerUpdateGridValue -= SetGridEntityValue;
                 _networkTicTacToe.CurrentSessionState.OnValueChanged -= OnGameSessionStateChanged;
             }
         }
@@ -75,12 +80,28 @@ namespace Gameplay.GameState
             else
             {
                 _networkTicTacToe.CurrentPlayerTurn.OnValueChanged += OnPlayerTurnChanged;
-                _networkTicTacToe.OnServerUpdateGridValue += _gameField.SetGridEntityValue;
+                _networkTicTacToe.OnServerUpdateGridValue += SetGridEntityValue;
                 _networkTicTacToe.CurrentSessionState.OnValueChanged += OnGameSessionStateChanged;
+
+                var playerData =
+                    SessionManager<SessionPlayerData>.Instance.GetPlayerData(NetworkManager.Singleton.LocalClientId);
+                if (playerData.HasValue)
+                {
+                    GameHudUI.PlayerSideText = $"Your side is: {playerData.Value.MarkType}";
+                }
             }
         }
 
-        private void OnGameSessionStateChanged(NetworkTicTacToe.SessionState previousvalue, NetworkTicTacToe.SessionState newvalue)
+        public void SetGridEntityValue(Coord coord, GameMarkType mark)
+        {
+            if (_gameField != null)
+            {
+                _gameField.SetGridEntityValue(coord, mark);
+            }
+        }
+
+        private void OnGameSessionStateChanged(NetworkTicTacToe.SessionState previousvalue,
+            NetworkTicTacToe.SessionState newvalue)
         {
             if (newvalue == NetworkTicTacToe.SessionState.GameFinished)
             {
@@ -103,6 +124,11 @@ namespace Gameplay.GameState
 
         private void UpdateUI()
         {
+            if (_gameField == null)
+            {
+                return;
+            }
+
             if (_isOurTurn)
             {
                 Debug.Log("yay its our turn");

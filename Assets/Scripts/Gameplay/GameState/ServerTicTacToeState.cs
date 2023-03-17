@@ -188,7 +188,7 @@ namespace Gameplay.GameState
                     return true;
                 }
 
-                if (CountLinePieces(markType, 0, 1, 1, 0) == _gridSize)
+                if (CountLinePieces(markType, 0, i, 1, 0) == _gridSize)
                 {
                     return true;
                 }
@@ -243,7 +243,7 @@ namespace Gameplay.GameState
             _persistentGameState.SetGameResult(gameResult);
 
             _networkTicTacToe.CurrentSessionState.Value = NetworkTicTacToe.SessionState.GameFinished;
-
+            
             await Task.Delay(3000);
             
             SceneLoaderWrapper.Instance.LoadScene(

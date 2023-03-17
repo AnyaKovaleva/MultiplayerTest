@@ -25,7 +25,7 @@ namespace Gameplay.GameState
         }
         
         [SerializeField]
-        NetcodeHooks m_NetcodeHooks;
+        NetcodeHooks _netcodeHooks;
 
         [Inject] private ConnectionManager _connectionManager;
         
@@ -53,10 +53,21 @@ namespace Gameplay.GameState
             base.Awake();
 
             Instance = this;
+
+            _netcodeHooks = GetComponent<NetcodeHooks>();
+            _netcodeHooks.OnNetworkSpawnHook += OnNetworkSpawn;
+            _netcodeHooks.OnNetworkDespawnHook += OnNetworkDespawn;
             
-            m_NetcodeHooks.OnNetworkSpawnHook += OnNetworkSpawn;
-            m_NetcodeHooks.OnNetworkDespawnHook += OnNetworkDespawn;
-            
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            if (_netcodeHooks)
+            {
+                _netcodeHooks.OnNetworkSpawnHook -= OnNetworkSpawn;
+                _netcodeHooks.OnNetworkDespawnHook -= OnNetworkDespawn;
+            }
         }
 
         protected override void Start()
