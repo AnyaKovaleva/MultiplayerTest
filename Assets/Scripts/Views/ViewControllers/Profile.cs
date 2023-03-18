@@ -1,5 +1,6 @@
 ﻿using System;
 using Interfaces.UI;
+using QFSW.QC;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Utils;
@@ -16,12 +17,15 @@ namespace Views.ViewControllers
         private ProfileView _view;
 
         [Inject] private ProfileManager _profileManager;
+
+        public static Profile Instance;
         
         public override void InjectDependenciesAndInitialize(UIDocument document)
         {
             _view = new ProfileView(document);
             _profileManager.onProfileChanged += UpdateUsernameLabel;
             base.Initialize(_view);
+            Instance = this;
         }
 
         protected override void InitButtonEvents()
@@ -30,6 +34,33 @@ namespace Views.ViewControllers
             _view.SignUpButton.clicked += SignUp;
         }
 
+        [Command("get-profiles")]
+        public static void GetProfiles()
+        {
+            foreach (var profile in Instance._profileManager.AvailableProfiles)
+            {
+                Debug.Log(profile);
+            }
+        }
+
+        [Command("create-profile")]
+        public static void CreateProfile(string profile)
+        {
+            Instance._profileManager.CreateProfile(profile);
+        }
+
+        [Command("profile")]
+        public static void GetProfile()
+        {
+            Debug.Log(Instance._profileManager.Profile);
+        }
+
+        [Command("set-profile")]
+        public static void SetProfile(string profile)
+        {
+            Instance._profileManager.Profile = profile;
+        }
+        
         private void SignIn()
         {
             
@@ -39,6 +70,7 @@ namespace Views.ViewControllers
         {
             
         }
+        
 
         private void UpdateUsernameLabel()
         {

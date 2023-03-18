@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ConnectionManagement;
 using Enums;
 using Gameplay.Structs;
@@ -83,12 +84,25 @@ namespace Gameplay.GameState
                 _networkTicTacToe.OnServerUpdateGridValue += SetGridEntityValue;
                 _networkTicTacToe.CurrentSessionState.OnValueChanged += OnGameSessionStateChanged;
 
-                var playerData =
-                    SessionManager<SessionPlayerData>.Instance.GetPlayerData(NetworkManager.Singleton.LocalClientId);
-                if (playerData.HasValue)
+                GetPlayerData();
+            }
+        }
+
+        private async void GetPlayerData()
+        {
+            if (GameHudUI == null)
+            {
+                while (GameHudUI == null)
                 {
-                    GameHudUI.PlayerSideText = $"Your side is: {playerData.Value.MarkType}";
+                    await Task.Delay(100);
                 }
+            }
+
+            Debug.LogWarning("GameHUD not null");
+            GameMarkType? markType = _networkTicTacToe.GetMarkType(NetworkManager.Singleton.LocalClientId);
+            if (markType.HasValue)
+            {
+                GameHudUI.PlayerSideText = $"Your side is: {markType.Value}";
             }
         }
 

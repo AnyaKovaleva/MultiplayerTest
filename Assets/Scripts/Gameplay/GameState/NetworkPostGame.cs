@@ -71,5 +71,18 @@ namespace Gameplay.GameState
 
         
         public NetworkVariable<GameResultState> GameResultState = new NetworkVariable<GameResultState>();
+
+        public PostGamePlayerState? GetPlayerData(ulong clientId)
+        {
+            for (int i = 0; i < _players.Count; i++)
+            {
+                if (_players[i].ClientId == clientId)
+                {
+                    return _players[i];
+                }
+            }
+
+            return null;
+        }
     }
 }

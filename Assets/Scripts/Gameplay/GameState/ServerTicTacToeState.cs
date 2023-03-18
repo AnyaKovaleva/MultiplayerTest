@@ -71,6 +71,7 @@ namespace Gameplay.GameState
                 if (playerData.HasValue)
                 {
                     _players.Add(playerData.Value);
+                    _networkTicTacToe.Players.Add(new NetworkTicTacToe.GamePlayer(playerData.Value.ClientID, playerData.Value.MarkType));
                     Debug.Log($"player name: {playerData.Value.PlayerName} seat type: {playerData.Value.MarkType}");
                 }
                 else
@@ -78,7 +79,7 @@ namespace Gameplay.GameState
                     Debug.LogError("Cant get data of " + clientID);
                 }
             }
-
+            
             //X starts game
             _networkTicTacToe.CurrentPlayerTurn.Value = _players.Find(x => x.MarkType == GameMarkType.X).ClientID;
             _networkTicTacToe.CurrentSessionState.Value = NetworkTicTacToe.SessionState.Active;

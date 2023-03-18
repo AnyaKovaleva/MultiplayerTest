@@ -118,7 +118,7 @@ namespace Views.ViewControllers
 
             try
             {
-                var playerData = _postGameState.GetPlayerDataServerRpc(NetworkManager.Singleton.LocalClientId);
+                var playerData = _postGameState.NetworkPostGame.GetPlayerData(NetworkManager.Singleton.LocalClientId);
                 if (playerData == null)
                 {
                     Debug.LogError("client datafrom server is null");

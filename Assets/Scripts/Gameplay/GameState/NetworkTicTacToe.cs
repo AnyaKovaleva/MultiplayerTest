@@ -14,6 +14,37 @@ namespace Gameplay.GameState
             Active,
             GameFinished
         }
+        
+        public struct GamePlayer : INetworkSerializable, IEquatable<GamePlayer>
+        {
+            public ulong ClientId;
+            public GameMarkType MarkType;
+
+            public GamePlayer(ulong clientId, GameMarkType markType)
+            {
+                ClientId = clientId;
+                MarkType = markType;
+            }
+
+            public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+            {
+                serializer.SerializeValue(ref ClientId);
+                serializer.SerializeValue(ref MarkType);
+            }
+
+            public bool Equals(GamePlayer other)
+            {
+                return ClientId == other.ClientId &&
+                       MarkType == other.MarkType;
+            }
+        }
+
+        private void Awake()
+        {
+            Players = new NetworkList<GamePlayer>();
+        }
+
+        public NetworkList<GamePlayer> Players;
 
         /// <summary>
         /// Keeping track of who's turn it is
@@ -56,5 +87,17 @@ namespace Gameplay.GameState
         {
             OnClientMadeMove?.Invoke(clientId, coord);
         }
+        
+        public GameMarkType? GetMarkType(ulong clientId)
+        {
+            foreach (var player in Players)
+            {
+                if (player.ClientId == clientId)
+                    return player.MarkType;
+            }
+
+            return null;
+        }
+        
     }
 }
